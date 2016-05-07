@@ -6,6 +6,7 @@
 package view_console;
 
 import java.util.Date;
+import java.util.InputMismatchException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +38,7 @@ public class ConsoleView {
     private void vacancyMenu(Vacancy v) {
         int menu;
         do {
-            System.out.println("Vacancy Menu");
+            System.out.println("---------Vacancy Menu--------");
             System.out.println("1. Edit Vacancy Detail");
             System.out.println("2. View Submitted Application");
             System.out.println("3. View Accepted Application");
@@ -87,7 +88,7 @@ public class ConsoleView {
     private void companyMenu(Company c) {
         int menu;
         do {
-            System.out.println("Company Menu");
+            System.out.println("----Company Menu----");
             System.out.println("1. Edit Profile");
             System.out.println("2. Show Vacancy List");
             System.out.println("3. Create Vacancy");
@@ -140,7 +141,7 @@ public class ConsoleView {
     private void applicantMenu(Applicant a) {
         int menu;
         do {
-            System.out.println("Applicant Menu");
+            System.out.println("--------Applicant Menu-------");
             System.out.println("1. Edit Profile");
             System.out.println("2. Show Vacancy List");
             System.out.println("3. Apply Vacancy");
@@ -202,59 +203,64 @@ public class ConsoleView {
 
     private void mainMenu() {
 
-        int menu;
+        int menu = -1;
         do {
-            System.out.println("Main Menu");
-            System.out.println("1. Log In");
-            System.out.println("2. Register Company");
-            System.out.println("3. Register Applicant");
-            System.out.println("0. Exit");
-            System.out.print("Input Menu : ");
-            menu = numIn.nextInt();
-            switch (menu) {
-                case 1:
-                    System.out.println("input email : ");
-                    String email = strIn.nextLine();
-                    System.out.println("input password : ");
-                    String password = strIn.nextLine();
-                    User user = app.searchUser(email, password);
-                    if (user == null) {
-                        System.out.println("Wrong email and password");
-                    } else {
-                        if (user instanceof Applicant) {
+            try {
+                System.out.println("----------------------");
+                System.out.println("-------Main Menu------");
+                System.out.println("1. Log In");
+                System.out.println("2. Register Company");
+                System.out.println("3. Register Applicant");
+                System.out.println("0. Exit");
+                System.out.print("Input Menu : ");
+                menu = numIn.nextInt();
+                switch (menu) {
+                    case 1:
+                        System.out.println("input email : ");
+                        String email = strIn.nextLine();
+                        System.out.println("input password : ");
+                        String password = strIn.nextLine();
+                        User user = app.searchUser(email, password);
+                        if (user == null) {
+                            System.out.println("Wrong email and password");
+                        } else if (user instanceof Applicant) {
                             applicantMenu((Applicant) user);
                         } else if (user instanceof Company) {
                             companyMenu((Company) user);
                         }
-                    }
-                    break;
-                case 2:
-                    System.out.println("input email : ");
-                    email = strIn.nextLine();
-                    System.out.println("input password : ");
-                    password = strIn.nextLine();
-                    System.out.println("input company name : ");
-                    String name = strIn.nextLine();
-                    System.out.println("input company address : ");
-                    String address = strIn.nextLine();
-                    app.register(0, email, password, name, address);
-                    break;
-                case 3:
-                    System.out.println("input email : ");
-                    email = strIn.nextLine();
-                    System.out.println("input password : ");
-                    password = strIn.nextLine();
-                    System.out.println("input applicant name : ");
-                    name = strIn.nextLine();
-                    System.out.println("input applicant address : ");
-                    address = strIn.nextLine();
-                    app.register(1, email, password, name, address);
-                    break;
-                case 0:
-                    System.out.println("thank you");
-                    break;
-                default:
-                    System.out.println("Wrong Choice");
+                        break;
+                    case 2:
+                        System.out.println("input email : ");
+                        email = strIn.nextLine();
+                        System.out.println("input password : ");
+                        password = strIn.nextLine();
+                        System.out.println("input company name : ");
+                        String name = strIn.nextLine();
+                        System.out.println("input company address : ");
+                        String address = strIn.nextLine();
+                        app.register(0, email, password, name, address);
+                        break;
+                    case 3:
+                        System.out.println("input email : ");
+                        email = strIn.nextLine();
+                        System.out.println("input password : ");
+                        password = strIn.nextLine();
+                        System.out.println("input applicant name : ");
+                        name = strIn.nextLine();
+                        System.out.println("input applicant address : ");
+                        address = strIn.nextLine();
+                        app.register(1, email, password, name, address);
+                        break;
+                    case 0:
+                        System.out.println("thank you");
+                        break;
+                    default:
+                        System.out.println("Wrong Choice");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Wrong input type");
+                numIn = new Scanner(System.in);
+                strIn = new Scanner(System.in);
             }
         } while (menu != 0);
 
