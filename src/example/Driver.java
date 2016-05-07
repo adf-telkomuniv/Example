@@ -6,7 +6,7 @@
 package example;
 
 import model.Application;
-import view.ConsoleView;
+import view_console.ConsoleView;
 
 /**
  *
