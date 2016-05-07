@@ -27,29 +27,46 @@ public class Application {
     }
 
     // Vacancy Menu
-    //    1. Edit Vacancy Detail
-    public void editVacancy(Vacancy v, String name, String detail, Date deadline) {
-        v.setVacancyName(name);
-        v.setVacancyDetail(detail);
-        v.setDeadline(deadline);
+    /**
+     * Vacancy Menu 1 - Edit Vacancy Detail
+     *
+     * @param vacancy
+     * @param name
+     * @param detail
+     * @param deadline
+     */
+    public void editVacancy(Vacancy vacancy,
+            String name, String detail, Date deadline) {
+        vacancy.setVacancyName(name);
+        vacancy.setVacancyDetail(detail);
+        vacancy.setDeadline(deadline);
         if (saveMode == 1) {
             saveFile();
         } else if (saveMode == 2) {
         }
     }
 
-    //    4. Accept Application File
-    public void acceptApplication(Vacancy v, int applicationId) {
-        v.acceptFile(applicationId);
+    /**
+     * Vacancy Menu 4 - Accept Application File
+     *
+     * @param vacancy
+     * @param applicationId
+     */
+    public void acceptApplication(Vacancy vacancy, int applicationId) {
+        vacancy.acceptFile(applicationId);
         if (saveMode == 1) {
             saveFile();
         } else if (saveMode == 2) {
         }
     }
 
-    //    5. Close Vacancy
-    public void closeVacancy(Vacancy v) {
-        v.setActive(false);
+    /**
+     * Vacancy Menu 5 - Close Vacancy,
+     *
+     * @param vacancy
+     */
+    public void closeVacancy(Vacancy vacancy) {
+        vacancy.setActive(false);
         if (saveMode == 1) {
             saveFile();
         } else if (saveMode == 2) {
@@ -57,55 +74,86 @@ public class Application {
     }
 
     // Company Menu
-    //    1. Edit Profile
-    public void editCompany(Company c, String name, String address) {
-        c.setName(name);
-        c.setAddress(address);
+    /**
+     * Company Menu 1 - Edit Company Profile
+     *
+     * @param company
+     * @param name
+     * @param address
+     */
+    public void editCompany(Company company, String name, String address) {
+        company.setName(name);
+        company.setAddress(address);
         if (saveMode == 1) {
             saveFile();
         } else if (saveMode == 2) {
         }
     }
 
-    //    3. Create Vacancy
-    public void createVacancy(Company c, String name, Date deadline) {
-        c.createVacancy(Vacancy.generateId(), name, deadline);
+    /**
+     * Company Menu 3 - Create new Vacancy
+     *
+     * @param company
+     * @param vacancyName
+     * @param deadline
+     */
+    public void createVacancy(Company company,
+            String vacancyName, Date deadline) {
+        company.createVacancy(Vacancy.generateId(), vacancyName, deadline);
         if (saveMode == 1) {
             saveFile();
-
         } else if (saveMode == 2) {
         }
     }
 
     // Applicant Menu
-    //    1. Edit Profile
-    public void editProfile(Applicant a, String name, String address, String lastEducation, String expertise) {
-        a.setName(name);
-        a.setAddress(address);
-        a.setLastEducation(lastEducation);
-        a.setExpertise(expertise);
+    /**
+     * Applicant Menu 1 - Edit Applicant Profile
+     *
+     * @param applicant
+     * @param name
+     * @param address
+     * @param lastEducation
+     * @param expertise
+     */
+    public void editProfile(Applicant applicant, String name, String address,
+            String lastEducation, String expertise) {
+        applicant.setName(name);
+        applicant.setAddress(address);
+        applicant.setLastEducation(lastEducation);
+        applicant.setExpertise(expertise);
         if (saveMode == 1) {
             saveFile();
-
         } else if (saveMode == 2) {
         }
     }
 
-    //    3. Apply Vacancy
-    public void applyJob(Applicant a, int vacancyId, String resume) {
+    /**
+     * Applicant Menu 3 - Apply Vacancy
+     *
+     * @param applicant
+     * @param vacancyId
+     * @param resume
+     */
+    public void applyJob(Applicant applicant, int vacancyId, String resume) {
         Vacancy v = getVacancy(vacancyId);
         if (v == null) {
             throw new IllegalStateException("Vacancy not found");
         }
-        ApplicationFile file = a.createApplicationFile(resume);
-        v.addSubmittedFile(a.getEmail(), file);
+        ApplicationFile file = applicant.createApplicationFile(resume);
+        v.addSubmittedFile(applicant.getEmail(), file);
         if (saveMode == 1) {
             saveFile();
-
         } else if (saveMode == 2) {
         }
     }
 
+    /**
+     * get Vacancy by ID
+     *
+     * @param vacancyId
+     * @return Vacancy, null if not found
+     */
     public Vacancy getVacancy(int vacancyId) {
         if (saveMode == 1) {
             loadFile();
@@ -125,35 +173,57 @@ public class Application {
     }
 
     // Main Menu
-    //    1. Log In
+    /**
+     * Main Menu 1 - Log In
+     *
+     * @param email
+     * @param password
+     * @return User, null if not found
+     */
     public User searchUser(String email, String password) {
         if (saveMode == 1) {
             loadFile();
         } else if (saveMode == 2) {
         }
         for (User user : users) {
-            if (user.getEmail().equals(email) && user.getPassword().equals(password)) {
+            if (user.getEmail().equals(email)
+                    && user.getPassword().equals(password)) {
                 return user;
             }
         }
         return null;
     }
 
-    //    2. Register
+    /**
+     * Main Menu 2 - Register
+     *
+     * @param option user type, 0 = Company, 1 = Applicant
+     * @param email
+     * @param password
+     * @param name
+     * @param address
+     */
     public void register(int option, String email, String password, String name, String address) {
         User user;
-        if (option == 1) {
-            user = new Applicant(email, password);
-        } else if (option == 0) {
-            user = new Company(email, password);
-        } else {
-            throw new IllegalStateException("define option=1/0");
+        switch (option) {
+            case 1:
+                user = new Applicant(email, password);
+                break;
+            case 0:
+                user = new Company(email, password);
+                break;
+            default:
+                throw new IllegalStateException("define option=1/0");
         }
         user.setName(name);
         user.setAddress(address);
         adduser(user);
     }
 
+    /**
+     *
+     * @return list of User
+     */
     public List<User> getUsers() {
         if (saveMode == 1) {
             loadFile();
@@ -162,6 +232,10 @@ public class Application {
         return users;
     }
 
+    /**
+     *
+     * @param users list of User
+     */
     public void setUsers(List<User> users) {
         this.users = users;
         if (saveMode == 1) {
@@ -171,6 +245,11 @@ public class Application {
         }
     }
 
+    /**
+     * add user to users list
+     *
+     * @param user new user
+     */
     public void adduser(User user) {
         users.add(user);
         if (saveMode == 1) {
@@ -180,6 +259,12 @@ public class Application {
         }
     }
 
+    /**
+     * get i-th user from users list
+     *
+     * @param i
+     * @return i-th user
+     */
     public User getUser(int i) {
         if (saveMode == 1) {
             loadFile();
@@ -188,6 +273,11 @@ public class Application {
         return users.get(i);
     }
 
+    /**
+     * set save mode
+     *
+     * @param saveMode save mode, 0 = no save, 1 = file, 2 = database, 3 = ORM
+     */
     public void setSaveMode(int saveMode) {
         this.saveMode = saveMode;
         file = null;
@@ -215,11 +305,17 @@ public class Application {
         return saveMode;
     }
 
+    /**
+     * save users list and log id to file
+     */
     private void saveFile() {
         file.saveUsers(users);
         file.saveLog();
     }
 
+    /**
+     * load users list and log id from file
+     */
     private void loadFile() {
         users = file.loadUsers();
         int[] log = file.loadLog();
