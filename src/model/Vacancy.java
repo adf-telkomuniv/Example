@@ -16,7 +16,7 @@ import java.util.Map;
  *
  * @author dee
  */
-public class Vacancy implements Serializable{
+public class Vacancy implements Serializable {
 
     private static int iterator;
 
@@ -71,8 +71,10 @@ public class Vacancy implements Serializable{
 
     public void acceptFile(int applicationId) {
         Object[] a = removeSubmittedFile(applicationId);
-        if (a.length > 0) {
+        if (a != null) {
             addAcceptedFile((String) a[0], (ApplicationFile) a[1]);
+        } else {
+            throw new IllegalStateException("Application File not found");
         }
     }
 
@@ -186,7 +188,7 @@ public class Vacancy implements Serializable{
             String username = entry.getKey();
             ApplicationFile file = entry.getValue();
             if (file.getApplicationId() == applicationId) {
-                submittedFiles.remove(username);
+//                submittedFiles.remove(username);
                 return new Object[]{username, file};
             }
         }

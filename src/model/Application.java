@@ -40,10 +40,7 @@ public class Application {
         vacancy.setVacancyName(name);
         vacancy.setVacancyDetail(detail);
         vacancy.setDeadline(deadline);
-        if (saveMode == 1) {
-            saveFile();
-        } else if (saveMode == 2) {
-        }
+        save();
     }
 
     /**
@@ -54,10 +51,7 @@ public class Application {
      */
     public void acceptApplication(Vacancy vacancy, int applicationId) {
         vacancy.acceptFile(applicationId);
-        if (saveMode == 1) {
-            saveFile();
-        } else if (saveMode == 2) {
-        }
+        save();
     }
 
     /**
@@ -67,10 +61,7 @@ public class Application {
      */
     public void closeVacancy(Vacancy vacancy) {
         vacancy.setActive(false);
-        if (saveMode == 1) {
-            saveFile();
-        } else if (saveMode == 2) {
-        }
+        save();
     }
 
     // Company Menu
@@ -84,10 +75,7 @@ public class Application {
     public void editCompany(Company company, String name, String address) {
         company.setName(name);
         company.setAddress(address);
-        if (saveMode == 1) {
-            saveFile();
-        } else if (saveMode == 2) {
-        }
+        save();
     }
 
     /**
@@ -100,10 +88,7 @@ public class Application {
     public void createVacancy(Company company,
             String vacancyName, Date deadline) {
         company.createVacancy(Vacancy.generateId(), vacancyName, deadline);
-        if (saveMode == 1) {
-            saveFile();
-        } else if (saveMode == 2) {
-        }
+        save();
     }
 
     // Applicant Menu
@@ -122,10 +107,7 @@ public class Application {
         applicant.setAddress(address);
         applicant.setLastEducation(lastEducation);
         applicant.setExpertise(expertise);
-        if (saveMode == 1) {
-            saveFile();
-        } else if (saveMode == 2) {
-        }
+        save();
     }
 
     /**
@@ -136,16 +118,14 @@ public class Application {
      * @param resume
      */
     public void applyJob(Applicant applicant, int vacancyId, String resume) {
+        load();
         Vacancy v = getVacancy(vacancyId);
         if (v == null) {
             throw new IllegalStateException("Vacancy not found");
         }
-        ApplicationFile file = applicant.createApplicationFile(resume);
-        v.addSubmittedFile(applicant.getEmail(), file);
-        if (saveMode == 1) {
-            saveFile();
-        } else if (saveMode == 2) {
-        }
+        ApplicationFile appFile = applicant.createApplicationFile(resume);
+        v.addSubmittedFile(applicant.getEmail(), appFile);
+        save();
     }
 
     /**
@@ -155,10 +135,7 @@ public class Application {
      * @return Vacancy, null if not found
      */
     public Vacancy getVacancy(int vacancyId) {
-        if (saveMode == 1) {
-            loadFile();
-        } else if (saveMode == 2) {
-        }
+        load();
         for (User u : users) {
             if (u instanceof Company) {
                 Company c = (Company) u;
@@ -181,10 +158,7 @@ public class Application {
      * @return User, null if not found
      */
     public User searchUser(String email, String password) {
-        if (saveMode == 1) {
-            loadFile();
-        } else if (saveMode == 2) {
-        }
+        load();
         for (User user : users) {
             if (user.getEmail().equals(email)
                     && user.getPassword().equals(password)) {
@@ -225,10 +199,7 @@ public class Application {
      * @return list of User
      */
     public List<User> getUsers() {
-        if (saveMode == 1) {
-            loadFile();
-        } else if (saveMode == 2) {
-        }
+        load();
         return users;
     }
 
@@ -238,11 +209,7 @@ public class Application {
      */
     public void setUsers(List<User> users) {
         this.users = users;
-        if (saveMode == 1) {
-            saveFile();
-
-        } else if (saveMode == 2) {
-        }
+        save();
     }
 
     /**
@@ -252,11 +219,7 @@ public class Application {
      */
     public void adduser(User user) {
         users.add(user);
-        if (saveMode == 1) {
-            saveFile();
-
-        } else if (saveMode == 2) {
-        }
+        save();
     }
 
     /**
@@ -266,10 +229,7 @@ public class Application {
      * @return i-th user
      */
     public User getUser(int i) {
-        if (saveMode == 1) {
-            loadFile();
-        } else if (saveMode == 2) {
-        }
+        load();
         return users.get(i);
     }
 
@@ -305,10 +265,24 @@ public class Application {
         return saveMode;
     }
 
+    public void save() {
+        if (saveMode == 1) {
+            saveFile();
+        } else if (saveMode == 2) {
+        }
+    }
+
+    public void load() {
+        if (saveMode == 1) {
+            loadFile();
+        } else if (saveMode == 2) {
+        }
+    }
+
     /**
      * save users list and log id to file
      */
-    private void saveFile() {
+    public void saveFile() {
         file.saveUsers(users);
         file.saveLog();
     }

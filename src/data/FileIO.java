@@ -33,8 +33,8 @@ public class FileIO {
     }
 
     public void saveObject(Object o, String filename) {
-        try (FileOutputStream fout = new FileOutputStream(filename)) {
-            ObjectOutputStream oout = new ObjectOutputStream(fout);
+        try (FileOutputStream fout = new FileOutputStream(filename);
+                ObjectOutputStream oout = new ObjectOutputStream(fout)) {
             oout.writeObject(o);
             oout.flush();
             oout.close();
@@ -52,9 +52,7 @@ public class FileIO {
             File f = new File(filename);
             System.out.println("new File Created");
             return null;
-        } catch (IOException ex) {
-            throw new AssertionError(ex.getMessage());
-        } catch (ClassNotFoundException ex) {
+        } catch (IOException | ClassNotFoundException ex) {
             throw new AssertionError(ex.getMessage());
         }
     }
