@@ -5,16 +5,15 @@
  */
 package data;
 
-import java.io.EOFException;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import model.ApplicationFile;
 import model.User;
 import model.Vacancy;
@@ -50,7 +49,9 @@ public class FileIO {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
             return ois.readObject();
         } catch (FileNotFoundException ex) {
-            throw new AssertionError(ex.getMessage());
+            File f = new File(filename);
+            System.out.println("new File Created");
+            return null;
         } catch (IOException ex) {
             throw new AssertionError(ex.getMessage());
         } catch (ClassNotFoundException ex) {
@@ -63,7 +64,12 @@ public class FileIO {
     }
 
     public List<User> loadUsers() {
-        return (List< User>) loadObject(filename);
+        List<User> users = (List< User>) loadObject(filename);
+        if (users != null) {
+            return users;
+        } else {
+            return new ArrayList();
+        }
     }
 
     public void saveLog() {
@@ -73,6 +79,27 @@ public class FileIO {
 
     public int[] loadLog() {
         int[] log = (int[]) loadObject(fileLog);
-        return log;
+        if (log != null) {
+            return log;
+        } else {
+            return new int[]{0, 0};
+        }
     }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+    public String getFileLog() {
+        return fileLog;
+    }
+
+    public void setFileLog(String fileLog) {
+        this.fileLog = fileLog;
+    }
+
 }

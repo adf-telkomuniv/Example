@@ -20,6 +20,7 @@ public class Driver {
     public static void main(String[] args) {
         // TODO code application logic here
         Application app = new Application();
+        app.setSaveMode(1);
         new ConsoleView(app);
     }
 

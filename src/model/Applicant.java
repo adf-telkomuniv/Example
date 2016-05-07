@@ -49,11 +49,6 @@ public class Applicant extends User implements Serializable {
 
     @Override
     public String toString() {
-//        return super.toString()
-//                + "\n\tApplicant{"
-//                + "\n\t lastEducation=" + lastEducation
-//                + "\n\t  expertise=" + expertise
-//                + "\n\t}";
         return "Applicant{"
                 + "\n email=" + getEmail()
                 + "\n name=" + getName()
@@ -67,6 +62,12 @@ public class Applicant extends User implements Serializable {
         return applicationFiles;
     }
 
+    /**
+     * create new application file
+     *
+     * @param resume
+     * @return new application file
+     */
     public ApplicationFile createApplicationFile(String resume) {
         ApplicationFile file = new ApplicationFile(ApplicationFile.generateId(), getName(), resume);
         applicationFiles.add(file);
@@ -77,11 +78,22 @@ public class Applicant extends User implements Serializable {
         this.applicationFiles = applicationFiles;
     }
 
+    /**
+     *
+     * @param i
+     * @return i-th ApplicationFile from the list
+     */
     public ApplicationFile getApplicationFile(int i) {
         return applicationFiles.get(i);
     }
 
-    public ApplicationFile searchgetApplicationFile(int idApplication) {
+    /**
+     * search ApplicationFile by Id
+     *
+     * @param idApplication
+     * @return ApplicationFile, null if not found
+     */
+    public ApplicationFile searchApplicationFile(int idApplication) {
         for (ApplicationFile file : applicationFiles) {
             if (file.getApplicationId() == idApplication) {
                 return file;

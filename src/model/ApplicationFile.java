@@ -12,7 +12,7 @@ import java.util.Date;
  *
  * @author dee
  */
-public class ApplicationFile implements Serializable{
+public class ApplicationFile implements Serializable {
 
     private static int iterator;
 
@@ -47,6 +47,10 @@ public class ApplicationFile implements Serializable{
 
     public int getApplicationId() {
         return applicationId;
+    }
+
+    public void setApplicationId(int applicationId) {
+        this.applicationId = applicationId;
     }
 
     @Override

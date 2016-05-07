@@ -117,8 +117,12 @@ public class ConsoleView {
                     System.out.println("Input Vacancy Name : ");
                     name = strIn.nextLine();
                     System.out.println("Select Deadline : ");
-                    Date deadline = new Date(strIn.nextLine());
-                    app.createVacancy(c, name, deadline);
+                    try {
+                        Date deadline = new Date(strIn.nextLine());
+                        app.createVacancy(c, name, deadline);
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("error while parsing date");
+                    }
                     break;
                 case 4:
                     System.out.println("Select Vacancy");
