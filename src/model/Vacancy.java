@@ -70,7 +70,9 @@ public class Vacancy implements Serializable {
     public void acceptFile(int applicationId) {
         Object[] a = removeSubmittedFile(applicationId);
         if (a != null) {
-            addAcceptedFile((String) a[0], (ApplicationFile) a[1]);
+            ApplicationFile file = (ApplicationFile) a[1];
+            file.setAccepted(true);
+            addAcceptedFile((String) a[0], file);
         } else {
             throw new IllegalStateException("Application File not found");
         }
@@ -265,8 +267,8 @@ public class Vacancy implements Serializable {
                 + "\n vacancy detail=" + vacancyDetail
                 + "\n deadline=" + deadline
                 + "\n active=" + active
-//                + "\n submittedFiles=" + submittedFiles
-//                + "\n acceptedFiles=" + acceptedFiles
+                //                + "\n submittedFiles=" + submittedFiles
+                //                + "\n acceptedFiles=" + acceptedFiles
                 + "\n}";
     }
 

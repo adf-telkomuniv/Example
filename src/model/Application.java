@@ -28,7 +28,7 @@ public class Application {
 
     // Vacancy Menu
     /**
-     * Vacancy Menu 1 - Edit Vacancy Detail
+     * Vacancy Menu 2 - Edit Vacancy Detail
      *
      * @param vacancy
      * @param name
@@ -44,7 +44,7 @@ public class Application {
     }
 
     /**
-     * Vacancy Menu 4 - Accept Application File
+     * Vacancy Menu 5 - Accept Application File
      *
      * @param vacancy
      * @param applicationId
@@ -55,7 +55,7 @@ public class Application {
     }
 
     /**
-     * Vacancy Menu 5 - Close Vacancy,
+     * Vacancy Menu 6 - Close Vacancy,
      *
      * @param vacancy
      */
@@ -66,7 +66,7 @@ public class Application {
 
     // Company Menu
     /**
-     * Company Menu 1 - Edit Company Profile
+     * Company Menu 2 - Edit Company Profile
      *
      * @param company
      * @param name
@@ -79,7 +79,7 @@ public class Application {
     }
 
     /**
-     * Company Menu 3 - Create new Vacancy
+     * Company Menu 4 - Create new Vacancy
      *
      * @param company
      * @param vacancyName
@@ -93,7 +93,7 @@ public class Application {
 
     // Applicant Menu
     /**
-     * Applicant Menu 1 - Edit Applicant Profile
+     * Applicant Menu 2 - Edit Applicant Profile
      *
      * @param applicant
      * @param name
@@ -111,20 +111,15 @@ public class Application {
     }
 
     /**
-     * Applicant Menu 3 - Apply Vacancy
+     * Applicant Menu 4 - Apply Vacancy
      *
      * @param applicant
-     * @param vacancyId
+     * @param v
      * @param resume
      */
-    public void applyJob(Applicant applicant, int vacancyId, String resume) {
-//        Vacancy v = getVacancy(vacancyId);
-//        if (v == null) {
-//            throw new IllegalStateException("Vacancy not found");
-//        }
+    public void applyJob(Applicant applicant, Vacancy v, String resume) {
         ApplicationFile appFile = applicant.createApplicationFile(resume);
-//        v.addSubmittedFile(applicant.getEmail(), appFile);
-        System.out.println("xxx = " + applicant.getApplicationFiles());
+        v.addSubmittedFile(applicant.getEmail(), appFile);
         save();
     }
 
@@ -158,7 +153,6 @@ public class Application {
      * @return User, null if not found
      */
     public User logIn(String email, String password) {
-        load();
         User user = searchUser(email);
         if (user != null && user.getPassword().equals(password)) {
             return user;
@@ -167,7 +161,7 @@ public class Application {
     }
 
     public User searchUser(String email) {
-        load();
+//        load();
         for (User user : users) {
             if (user.getEmail().equals(email)) {
                 return user;
@@ -211,7 +205,6 @@ public class Application {
      * @return list of User
      */
     public List<User> getUsers() {
-        load();
         return users;
     }
 
@@ -241,7 +234,6 @@ public class Application {
      * @return i-th user
      */
     public User getUser(int i) {
-        load();
         return users.get(i);
     }
 
@@ -285,18 +277,18 @@ public class Application {
         System.out.println("saved");
     }
 
-    private void load() {
-        if (saveMode == 1) {
-            loadFile();
-        } else if (saveMode == 2) {
-        }
-    }
+//    private void load() {
+//        if (saveMode == 1) {
+//            loadFile();
+//        } else if (saveMode == 2) {
+//        }
+//    }
 
     /**
      * save users list and log id to file
      */
     private void saveFile() {
-        System.out.println("Save file = "+users);
+        System.out.println("Save file = " + users);
         file.saveUsers(users);
         file.saveLog();
     }

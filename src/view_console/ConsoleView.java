@@ -212,14 +212,14 @@ public class ConsoleView {
                         System.out.println("Input Vacancy ID : ");
                         int vacancyId = numIn.nextInt();
                         Vacancy v = app.getVacancy(vacancyId);
-//                        if (v != null) {
-                        System.out.println(v);
-                        System.out.println("Input Resume : ");
-                        String resume = strIn.nextLine();
-                        app.applyJob(a, vacancyId, resume);
-//                        } else {
-//                            System.out.println("Vacancy ID not found");
-//                        }
+                        if (v != null) {
+                            System.out.println(v);
+                            System.out.println("Input Resume : ");
+                            String resume = strIn.nextLine();
+                            app.applyJob(a, v, resume);
+                        } else {
+                            System.out.println("Vacancy ID not found");
+                        }
                         System.out.println("xxx = " + a.getApplicationFiles());
                         break;
                     case 4:

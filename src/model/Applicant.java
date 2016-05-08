@@ -55,7 +55,6 @@ public class Applicant extends User implements Serializable {
                 + "\n address=" + getAddress()
                 + "\n lastEducation=" + lastEducation
                 + "\n  expertise=" + expertise
-                + "\n  aa=" + applicationFiles
                 + "\n}";
     }
 
@@ -73,9 +72,6 @@ public class Applicant extends User implements Serializable {
         ApplicationFile file = new ApplicationFile(ApplicationFile.generateId(), getName(), resume);
         applicationFiles.add(file);
         return file;
-
-//        applicationFiles.add(new ApplicationFile(ApplicationFile.generateId(), getName(), resume));
-//        return applicationFiles.get(applicationFiles.size() - 1);
     }
 
     public void setApplicationFiles(List<ApplicationFile> applicationFiles) {
