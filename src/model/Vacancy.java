@@ -6,10 +6,8 @@
 package model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -188,7 +186,7 @@ public class Vacancy implements Serializable {
             String username = entry.getKey();
             ApplicationFile file = entry.getValue();
             if (file.getApplicationId() == applicationId) {
-//                submittedFiles.remove(username);
+                submittedFiles.remove(username);
                 return new Object[]{username, file};
             }
         }
@@ -262,13 +260,13 @@ public class Vacancy implements Serializable {
 //                + "\n\t\t acceptedFiles=" + acceptedFiles
 //                + "\n\t\t}";
         return "Vacancy{"
-                + "\n idVacancy=" + vacancyId
+                + "\n vacancy Id=" + vacancyId
                 + "\n vacancy name=" + vacancyName
                 + "\n vacancy detail=" + vacancyDetail
                 + "\n deadline=" + deadline
                 + "\n active=" + active
-                + "\n submittedFiles=" + submittedFiles
-                + "\n acceptedFiles=" + acceptedFiles
+//                + "\n submittedFiles=" + submittedFiles
+//                + "\n acceptedFiles=" + acceptedFiles
                 + "\n}";
     }
 

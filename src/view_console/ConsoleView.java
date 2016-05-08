@@ -7,7 +7,6 @@ package view_console;
 
 import java.util.Date;
 import java.util.InputMismatchException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -26,7 +25,7 @@ public class ConsoleView {
 
     private Scanner numIn;
     private Scanner strIn;
-    private Application app;
+    private final Application app;
 
     public ConsoleView(Application model) {
         this.app = model;
@@ -39,6 +38,9 @@ public class ConsoleView {
         int menu = -1;
         do {
             try {
+                app.load();
+                System.out.println("--------Vacancy Detail---------");
+                System.out.println(v);
                 System.out.println("---------Vacancy Menu--------");
                 System.out.println("1. Edit Vacancy Detail");
                 System.out.println("2. View Submitted Application");
@@ -50,16 +52,18 @@ public class ConsoleView {
                 menu = numIn.nextInt();
                 switch (menu) {
                     case 1:
-                        System.out.println("--------Vacancy Detail---------");
-                        System.out.println(v);
                         System.out.println("----------Edit Detail----------");
                         System.out.println("input Vacancy Name : ");
                         String name = strIn.nextLine();
                         System.out.println("input Vacancy Detail : ");
                         String detail = strIn.nextLine();
                         System.out.println("input deadline : ");
-                        Date deadline = new Date(strIn.nextLine());
-                        app.editVacancy(v, name, detail, deadline);
+                        try {
+                            Date deadline = new Date(strIn.nextLine());
+                            app.editVacancy(v, name, detail, deadline);
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("error while parsing date");
+                        }
                         break;
                     case 2:
                         System.out.println("View Submitted Application");
@@ -76,10 +80,11 @@ public class ConsoleView {
                         app.acceptApplication(v, applicationId);
                         break;
                     case 5:
-                        System.out.println("Vacancy closed");
                         app.closeVacancy(v);
+                        System.out.println("Vacancy closed");
                         break;
                     case 0:
+                        app.save();
                         break;
                     default:
                         System.out.println("Wrong Choice");
@@ -99,6 +104,9 @@ public class ConsoleView {
         int menu = -1;
         do {
             try {
+                app.load();
+                System.out.println("----------Profile------------");
+                System.out.println(c);
                 System.out.println("----Company Menu----");
                 System.out.println("1. Edit Profile");
                 System.out.println("2. Show Vacancy List");
@@ -109,8 +117,6 @@ public class ConsoleView {
                 menu = numIn.nextInt();
                 switch (menu) {
                     case 1:
-                        System.out.println("----------Profile------------");
-                        System.out.println(c);
                         System.out.println("----------Edit Profile-----------");
                         System.out.println("input company name : ");
                         String name = strIn.nextLine();
@@ -156,6 +162,8 @@ public class ConsoleView {
                 System.out.println("Wrong input type");
                 numIn = new Scanner(System.in);
                 strIn = new Scanner(System.in);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
         } while (menu != 0);
 
@@ -165,6 +173,9 @@ public class ConsoleView {
         int menu = -1;
         do {
             try {
+                app.load();
+                System.out.println("----------Profile------------");
+                System.out.println(a);
                 System.out.println("--------Applicant Menu-------");
                 System.out.println("1. Edit Profile");
                 System.out.println("2. Show Vacancy List");
@@ -175,8 +186,6 @@ public class ConsoleView {
                 menu = numIn.nextInt();
                 switch (menu) {
                     case 1:
-                        System.out.println("----------Profile------------");
-                        System.out.println(a);
                         System.out.println("----------Edit Profile-----------");
                         System.out.println("input applicant name : ");
                         String name = strIn.nextLine();
@@ -194,10 +203,12 @@ public class ConsoleView {
                             if (u instanceof Company) {
                                 Company c = (Company) u;
                                 System.out.println("Company : " + c.getName());
+                                System.out.println("Vacancy Id "
+                                        + "\t - Vacancy Name \t - Deadline");
                                 for (Vacancy v : c.getActiveVacancy()) {
                                     System.out.println(v.getVacancyId()
-                                            + " - " + v.getVacancyName()
-                                            + " - " + v.getDeadline());
+                                            + "\t - " + v.getVacancyName()
+                                            + "\t - " + v.getDeadline());
                                 }
                             }
                         }
@@ -219,8 +230,6 @@ public class ConsoleView {
                     case 4:
                         app.load();
                         System.out.println("Application File List");
-                        System.out.println(a.getApplicationFiles().size());
-
                         for (ApplicationFile file : a.getApplicationFiles()) {
                             System.out.println(file);
                         }
@@ -262,7 +271,7 @@ public class ConsoleView {
                         String email = strIn.nextLine();
                         System.out.println("input password : ");
                         String password = strIn.nextLine();
-                        User user = app.searchUser(email, password);
+                        User user = app.logIn(email, password);
                         if (user == null) {
                             System.out.println("Wrong email and password");
                         } else if (user instanceof Applicant) {
@@ -294,7 +303,7 @@ public class ConsoleView {
                         app.register(1, email, password, name, address);
                         break;
                     case 0:
-                        app.saveFile();
+                        app.save();
 
                         System.out.println("thank you");
                         break;
@@ -305,16 +314,23 @@ public class ConsoleView {
                 System.out.println("Wrong input type");
                 numIn = new Scanner(System.in);
                 strIn = new Scanner(System.in);
+            } catch (Exception e) {
+                System.out.println("error " +e.getMessage());
             }
         } while (menu != 0);
 
     }
 
     public void printMap(Map<String, ApplicationFile> map) {
-        for (Map.Entry<String, ApplicationFile> entry : map.entrySet()) {
-            String key = entry.getKey();
-            ApplicationFile file = entry.getValue();
-            System.out.println(key + " - " + file.getApplicationId() + " - " + file.getResume());
+        if (map.isEmpty()) {
+            System.out.println("Empty List");
+        } else {
+            System.out.println("application id \t - applicant id \t - resume");
+            for (Map.Entry<String, ApplicationFile> entry : map.entrySet()) {
+                String key = entry.getKey();
+                ApplicationFile file = entry.getValue();
+                System.out.println(file.getApplicationId() + "\t - " + key + "\t - " + file.getResume());
+            }
         }
     }
 }

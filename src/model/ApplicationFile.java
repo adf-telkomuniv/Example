@@ -56,10 +56,13 @@ public class ApplicationFile implements Serializable {
     @Override
     public String toString() {
         return "ApplicationFile{"
-                + "\nidApplication=" + applicationId
-                + "\nname=" + name
-                + "\ndate_created=" + date_created
-                + "\nresume=" + resume + '}';
+                + "\n idApplication=" + applicationId
+                + "\n name=" + name
+                + "\n date_created=" + date_created
+                + "\n resume=" + resume
+                + "\n status = " + accepted
+                + "\n}";
+
     }
 
     public static int getIterator() {

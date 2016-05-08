@@ -12,8 +12,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.ApplicationFile;
 import model.User;
 import model.Vacancy;
@@ -49,7 +53,13 @@ public class FileIO {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
             return ois.readObject();
         } catch (FileNotFoundException ex) {
-            File f = new File(filename);
+            saveUsers(null);
+            saveLog();
+//            try {
+//                new PrintWriter(new File(filename));
+//            } catch (IOException ex1) {
+//                throw new AssertionError(ex1.getMessage());
+//            }
             System.out.println("new File Created");
             return null;
         } catch (IOException | ClassNotFoundException ex) {

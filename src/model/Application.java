@@ -157,11 +157,19 @@ public class Application {
      * @param password
      * @return User, null if not found
      */
-    public User searchUser(String email, String password) {
+    public User logIn(String email, String password) {
+        load();
+        User user = searchUser(email);
+        if (user != null && user.getPassword().equals(password)) {
+            return user;
+        }
+        return null;
+    }
+
+    public User searchUser(String email) {
         load();
         for (User user : users) {
-            if (user.getEmail().equals(email)
-                    && user.getPassword().equals(password)) {
+            if (user.getEmail().equals(email)) {
                 return user;
             }
         }
@@ -178,20 +186,24 @@ public class Application {
      * @param address
      */
     public void register(int option, String email, String password, String name, String address) {
-        User user;
-        switch (option) {
-            case 1:
-                user = new Applicant(email, password);
-                break;
-            case 0:
-                user = new Company(email, password);
-                break;
-            default:
-                throw new IllegalStateException("define option=1/0");
+        User user = searchUser(email);
+        if (user == null) {
+            switch (option) {
+                case 1:
+                    user = new Applicant(email, password);
+                    break;
+                case 0:
+                    user = new Company(email, password);
+                    break;
+                default:
+                    throw new IllegalStateException("define option=1/0");
+            }
+            user.setName(name);
+            user.setAddress(address);
+            adduser(user);
+        } else {
+            throw new IllegalStateException("email already exists");
         }
-        user.setName(name);
-        user.setAddress(address);
-        adduser(user);
     }
 
     /**
@@ -282,7 +294,7 @@ public class Application {
     /**
      * save users list and log id to file
      */
-    public void saveFile() {
+    private void saveFile() {
         file.saveUsers(users);
         file.saveLog();
     }
