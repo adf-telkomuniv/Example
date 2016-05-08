@@ -25,7 +25,7 @@ public class ConsoleView {
 
     private Scanner numIn;
     private Scanner strIn;
-    private final Application app;
+    private Application app;
 
     public ConsoleView(Application model) {
         this.app = model;
@@ -38,7 +38,6 @@ public class ConsoleView {
         int menu = -1;
         do {
             try {
-                app.load();
                 System.out.println("--------Vacancy Detail---------");
                 System.out.println(v);
                 System.out.println("---------Vacancy Menu--------");
@@ -84,7 +83,6 @@ public class ConsoleView {
                         System.out.println("Vacancy closed");
                         break;
                     case 0:
-                        app.save();
                         break;
                     default:
                         System.out.println("Wrong Choice");
@@ -94,19 +92,17 @@ public class ConsoleView {
                 numIn = new Scanner(System.in);
                 strIn = new Scanner(System.in);
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                System.out.println("Error in Vacancy Menu " + e.getMessage());
             }
         } while (menu != 0);
-
     }
 
     private void companyMenu(Company c) {
         int menu = -1;
         do {
             try {
-                app.load();
-                System.out.println("----------Profile------------");
-                System.out.println(c);
+//                System.out.println("----------Profile------------");
+//                System.out.println(c);
                 System.out.println("----Company Menu----");
                 System.out.println("1. Edit Profile");
                 System.out.println("2. Show Vacancy List");
@@ -153,7 +149,6 @@ public class ConsoleView {
                         }
                         break;
                     case 0:
-                        app.save();
                         break;
                     default:
                         System.out.println("Wrong Choice");
@@ -163,7 +158,7 @@ public class ConsoleView {
                 numIn = new Scanner(System.in);
                 strIn = new Scanner(System.in);
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                System.out.println("Error in Company Menu " + e.getMessage());
             }
         } while (menu != 0);
 
@@ -173,9 +168,8 @@ public class ConsoleView {
         int menu = -1;
         do {
             try {
-                app.load();
-                System.out.println("----------Profile------------");
-                System.out.println(a);
+//                System.out.println("----------Profile------------");
+//                System.out.println(a);
                 System.out.println("--------Applicant Menu-------");
                 System.out.println("1. Edit Profile");
                 System.out.println("2. Show Vacancy List");
@@ -218,24 +212,23 @@ public class ConsoleView {
                         System.out.println("Input Vacancy ID : ");
                         int vacancyId = numIn.nextInt();
                         Vacancy v = app.getVacancy(vacancyId);
-                        if (v != null) {
-                            System.out.println(v);
-                            System.out.println("Input Resume : ");
-                            String resume = strIn.nextLine();
-                            app.applyJob(a, vacancyId, resume);
-                        } else {
-                            System.out.println("Vacancy ID not found");
-                        }
+//                        if (v != null) {
+                        System.out.println(v);
+                        System.out.println("Input Resume : ");
+                        String resume = strIn.nextLine();
+                        app.applyJob(a, vacancyId, resume);
+//                        } else {
+//                            System.out.println("Vacancy ID not found");
+//                        }
+                        System.out.println("xxx = " + a.getApplicationFiles());
                         break;
                     case 4:
-                        app.load();
                         System.out.println("Application File List");
                         for (ApplicationFile file : a.getApplicationFiles()) {
                             System.out.println(file);
                         }
                         break;
                     case 0:
-                        app.save();
                         break;
                     default:
                         System.out.println("Wrong Choice");
@@ -245,7 +238,7 @@ public class ConsoleView {
                 numIn = new Scanner(System.in);
                 strIn = new Scanner(System.in);
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                System.out.println("Error in Applicant Menu " + e.getMessage());
             }
         } while (menu != 0);
 
@@ -256,7 +249,6 @@ public class ConsoleView {
         int menu = -1;
         do {
             try {
-                app.load();
                 System.out.println("----------------------");
                 System.out.println("-------Main Menu------");
                 System.out.println("1. Log In");
@@ -275,6 +267,7 @@ public class ConsoleView {
                         if (user == null) {
                             System.out.println("Wrong email and password");
                         } else if (user instanceof Applicant) {
+                            System.out.println("xxx = " + ((Applicant) user).getApplicationFiles());
                             applicantMenu((Applicant) user);
                         } else if (user instanceof Company) {
                             companyMenu((Company) user);
@@ -303,8 +296,6 @@ public class ConsoleView {
                         app.register(1, email, password, name, address);
                         break;
                     case 0:
-                        app.save();
-
                         System.out.println("thank you");
                         break;
                     default:
@@ -315,7 +306,7 @@ public class ConsoleView {
                 numIn = new Scanner(System.in);
                 strIn = new Scanner(System.in);
             } catch (Exception e) {
-                System.out.println("error " +e.getMessage());
+                System.out.println("Error in Main Menu " + e.getMessage());
             }
         } while (menu != 0);
 

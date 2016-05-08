@@ -55,6 +55,7 @@ public class Applicant extends User implements Serializable {
                 + "\n address=" + getAddress()
                 + "\n lastEducation=" + lastEducation
                 + "\n  expertise=" + expertise
+                + "\n  aa=" + applicationFiles
                 + "\n}";
     }
 

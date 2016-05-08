@@ -118,13 +118,13 @@ public class Application {
      * @param resume
      */
     public void applyJob(Applicant applicant, int vacancyId, String resume) {
-        load();
-        Vacancy v = getVacancy(vacancyId);
-        if (v == null) {
-            throw new IllegalStateException("Vacancy not found");
-        }
+//        Vacancy v = getVacancy(vacancyId);
+//        if (v == null) {
+//            throw new IllegalStateException("Vacancy not found");
+//        }
         ApplicationFile appFile = applicant.createApplicationFile(resume);
-        v.addSubmittedFile(applicant.getEmail(), appFile);
+//        v.addSubmittedFile(applicant.getEmail(), appFile);
+        System.out.println("xxx = " + applicant.getApplicationFiles());
         save();
     }
 
@@ -135,7 +135,7 @@ public class Application {
      * @return Vacancy, null if not found
      */
     public Vacancy getVacancy(int vacancyId) {
-        load();
+//        load();
         for (User u : users) {
             if (u instanceof Company) {
                 Company c = (Company) u;
@@ -277,14 +277,15 @@ public class Application {
         return saveMode;
     }
 
-    public void save() {
+    private void save() {
         if (saveMode == 1) {
             saveFile();
         } else if (saveMode == 2) {
         }
+        System.out.println("saved");
     }
 
-    public void load() {
+    private void load() {
         if (saveMode == 1) {
             loadFile();
         } else if (saveMode == 2) {
@@ -295,6 +296,7 @@ public class Application {
      * save users list and log id to file
      */
     private void saveFile() {
+        System.out.println("Save file = "+users);
         file.saveUsers(users);
         file.saveLog();
     }

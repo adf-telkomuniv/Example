@@ -55,11 +55,6 @@ public class FileIO {
         } catch (FileNotFoundException ex) {
             saveUsers(null);
             saveLog();
-//            try {
-//                new PrintWriter(new File(filename));
-//            } catch (IOException ex1) {
-//                throw new AssertionError(ex1.getMessage());
-//            }
             System.out.println("new File Created");
             return null;
         } catch (IOException | ClassNotFoundException ex) {
