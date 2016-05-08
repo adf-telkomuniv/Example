@@ -25,7 +25,7 @@ public class ConsoleView {
 
     private Scanner numIn;
     private Scanner strIn;
-    private Application app;
+    private final Application app;
 
     public ConsoleView(Application model) {
         this.app = model;
@@ -38,19 +38,22 @@ public class ConsoleView {
         int menu = -1;
         do {
             try {
-                System.out.println("--------Vacancy Detail---------");
-                System.out.println(v);
                 System.out.println("---------Vacancy Menu--------");
-                System.out.println("1. Edit Vacancy Detail");
-                System.out.println("2. View Submitted Application");
-                System.out.println("3. View Accepted Application");
-                System.out.println("4. Accept Application File");
-                System.out.println("5. Close Vacancy");
+                System.out.println("1. View Vacancy Detail");
+                System.out.println("2. Edit Vacancy Detail");
+                System.out.println("3. View Submitted Application");
+                System.out.println("4. View Accepted Application");
+                System.out.println("5. Accept Application File");
+                System.out.println("6. Close Vacancy");
                 System.out.println("0. Back");
                 System.out.println("Input menu : ");
                 menu = numIn.nextInt();
                 switch (menu) {
                     case 1:
+                        System.out.println("--------Vacancy Detail---------");
+                        System.out.println(v);
+                        break;
+                    case 2:
                         System.out.println("----------Edit Detail----------");
                         System.out.println("input Vacancy Name : ");
                         String name = strIn.nextLine();
@@ -64,21 +67,21 @@ public class ConsoleView {
                             System.out.println("error while parsing date");
                         }
                         break;
-                    case 2:
-                        System.out.println("View Submitted Application");
+                    case 3:
+                        System.out.println("-------View Submitted Application-------");
                         printMap(v.getSubmittedFiles());
                         break;
-                    case 3:
-                        System.out.println("Accepted Application");
+                    case 4:
+                        System.out.println("-------View Accepted Application-------");
                         printMap(v.getAcceptedFiles());
                         break;
-                    case 4:
-                        System.out.println("Accept Application");
+                    case 5:
+                        System.out.println("-------Accept Application-------");
                         System.out.println("Input Application ID : ");
                         int applicationId = numIn.nextInt();
                         app.acceptApplication(v, applicationId);
                         break;
-                    case 5:
+                    case 6:
                         app.closeVacancy(v);
                         System.out.println("Vacancy closed");
                         break;
@@ -101,18 +104,21 @@ public class ConsoleView {
         int menu = -1;
         do {
             try {
-//                System.out.println("----------Profile------------");
-//                System.out.println(c);
                 System.out.println("----Company Menu----");
-                System.out.println("1. Edit Profile");
-                System.out.println("2. Show Vacancy List");
-                System.out.println("3. Create Vacancy");
-                System.out.println("4. Select Vacancy");
+                System.out.println("1. View Profile");
+                System.out.println("2. Edit Profile");
+                System.out.println("3. Show Vacancy List");
+                System.out.println("4. Create Vacancy");
+                System.out.println("5. Select Vacancy");
                 System.out.println("0. Back");
                 System.out.print("Input Menu : ");
                 menu = numIn.nextInt();
                 switch (menu) {
                     case 1:
+                        System.out.println("----------Profile------------");
+                        System.out.println(c);
+                        break;
+                    case 2:
                         System.out.println("----------Edit Profile-----------");
                         System.out.println("input company name : ");
                         String name = strIn.nextLine();
@@ -120,13 +126,13 @@ public class ConsoleView {
                         String address = strIn.nextLine();
                         app.editCompany(c, name, address);
                         break;
-                    case 2:
-                        System.out.println("Vacancy List");
+                    case 3:
+                        System.out.println("-------View Vacancy List-------");
                         List<Vacancy> vacancyList = c.getVacancyList();
                         vacancyList.stream().forEach(System.out::println);
                         break;
-                    case 3:
-                        System.out.println("Create new Vacancy");
+                    case 4:
+                        System.out.println("-------Create new Vacancy-------");
                         System.out.println("Input Vacancy Name : ");
                         name = strIn.nextLine();
                         System.out.println("Select Deadline : ");
@@ -137,8 +143,8 @@ public class ConsoleView {
                             System.out.println("error while parsing date");
                         }
                         break;
-                    case 4:
-                        System.out.println("Select Vacancy");
+                    case 5:
+                        System.out.println("-------Select Vacancy-------");
                         System.out.println("Input Vacancy ID : ");
                         int idVacancy = numIn.nextInt();
                         Vacancy v = c.searchVacancy(idVacancy);
@@ -168,18 +174,21 @@ public class ConsoleView {
         int menu = -1;
         do {
             try {
-//                System.out.println("----------Profile------------");
-//                System.out.println(a);
                 System.out.println("--------Applicant Menu-------");
-                System.out.println("1. Edit Profile");
-                System.out.println("2. Show Vacancy List");
-                System.out.println("3. Apply Vacancy");
-                System.out.println("4. Show Application File List");
+                System.out.println("1. View Profile");
+                System.out.println("2. Edit Profile");
+                System.out.println("3. Show Vacancy List");
+                System.out.println("4. Apply Vacancy");
+                System.out.println("5. Show Application File List");
                 System.out.println("0. Back");
                 System.out.print("Input Menu : ");
                 menu = numIn.nextInt();
                 switch (menu) {
                     case 1:
+                        System.out.println("----------Profile------------");
+                        System.out.println(a);
+                        break;
+                    case 2:
                         System.out.println("----------Edit Profile-----------");
                         System.out.println("input applicant name : ");
                         String name = strIn.nextLine();
@@ -191,24 +200,23 @@ public class ConsoleView {
                         String expertise = strIn.nextLine();
                         app.editProfile(a, name, address, lastEducation, expertise);
                         break;
-                    case 2:
+                    case 3:
                         System.out.println("---------Vacancy List---------");
                         for (User u : app.getUsers()) {
                             if (u instanceof Company) {
                                 Company c = (Company) u;
                                 System.out.println("Company : " + c.getName());
-                                System.out.println("Vacancy Id "
-                                        + "\t - Vacancy Name \t - Deadline");
                                 for (Vacancy v : c.getActiveVacancy()) {
-                                    System.out.println(v.getVacancyId()
-                                            + "\t - " + v.getVacancyName()
-                                            + "\t - " + v.getDeadline());
+                                    System.out.println(
+                                            "Vacancy ID:" + v.getVacancyId()
+                                            + "\tVacancy Name:" + v.getVacancyName()
+                                            + "\tDeadline:" + v.getDeadline());
                                 }
                             }
                         }
                         break;
-                    case 3:
-                        System.out.println("Apply Vacancy");
+                    case 4:
+                        System.out.println("-------Apply Vacancy-------");
                         System.out.println("Input Vacancy ID : ");
                         int vacancyId = numIn.nextInt();
                         Vacancy v = app.getVacancy(vacancyId);
@@ -220,10 +228,9 @@ public class ConsoleView {
                         } else {
                             System.out.println("Vacancy ID not found");
                         }
-                        System.out.println("xxx = " + a.getApplicationFiles());
                         break;
-                    case 4:
-                        System.out.println("Application File List");
+                    case 5:
+                        System.out.println("-------Application File List-------");
                         for (ApplicationFile file : a.getApplicationFiles()) {
                             System.out.println(file);
                         }
@@ -267,7 +274,6 @@ public class ConsoleView {
                         if (user == null) {
                             System.out.println("Wrong email and password");
                         } else if (user instanceof Applicant) {
-                            System.out.println("xxx = " + ((Applicant) user).getApplicationFiles());
                             applicantMenu((Applicant) user);
                         } else if (user instanceof Company) {
                             companyMenu((Company) user);
@@ -316,11 +322,12 @@ public class ConsoleView {
         if (map.isEmpty()) {
             System.out.println("Empty List");
         } else {
-            System.out.println("application id \t - applicant id \t - resume");
             for (Map.Entry<String, ApplicationFile> entry : map.entrySet()) {
                 String key = entry.getKey();
                 ApplicationFile file = entry.getValue();
-                System.out.println(file.getApplicationId() + "\t - " + key + "\t - " + file.getResume());
+                System.out.println("application id:" + file.getApplicationId()
+                        + "\t applicant id:" + key
+                        + "\t resume:" + file.getResume());
             }
         }
     }
