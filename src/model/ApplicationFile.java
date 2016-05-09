@@ -22,13 +22,14 @@ public class ApplicationFile implements Serializable {
     private String resume;
     private boolean accepted;
 
-    public ApplicationFile(int idApplication) {
-        this.applicationId = idApplication;
-        date_created = new Date();
-    }
+//    public ApplicationFile(int idApplication) {
+//        this.applicationId = idApplication;
+//        date_created = new Date();
+//    }
 
     public ApplicationFile(int idApplication, String name, String resume) {
         this.applicationId = idApplication;
+        date_created = new Date();
         this.resume = resume;
         this.name = name;
     }

@@ -289,7 +289,6 @@ public class Application {
      * save users list and log id to file
      */
     private void saveFile() {
-        System.out.println("Save file = " + users);
         file.saveUsers(users);
         file.saveLog();
     }
