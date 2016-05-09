@@ -65,7 +65,7 @@ public class Applicant extends User implements Serializable {
         return "Applicant{"
                 + "\n email=" + getEmail()
                 + "\n name=" + getName()
-                + "\n gender=" + (gender == 'm' ? "male" : "female")
+                + "\n gender=" + (gender == 'm' ? "male" : gender == 'f' ? "female" : "na")
                 + "\n address=" + getAddress()
                 + "\n lastEducation=" + lastEducation
                 + "\n  expertise=" + expertise

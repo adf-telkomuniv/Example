@@ -20,18 +20,18 @@ public class ApplicationFile implements Serializable {
     private Date date_created;
     private String name;
     private String resume;
-    private boolean accepted;
+    private int status;
 
 //    public ApplicationFile(int idApplication) {
 //        this.applicationId = idApplication;
 //        date_created = new Date();
 //    }
-
     public ApplicationFile(int idApplication, String name, String resume) {
         this.applicationId = idApplication;
         date_created = new Date();
         this.resume = resume;
         this.name = name;
+        this.status = 0;
     }
 
     public String getResume() {
@@ -61,7 +61,7 @@ public class ApplicationFile implements Serializable {
                 + "\n name=" + name
                 + "\n date_created=" + date_created
                 + "\n resume=" + resume
-                + "\n status = " + accepted
+                + "\n status = " + (status == 0 ? "submitted" : status == 1 ? "accepted" : "rejected")
                 + "\n}";
 
     }
@@ -74,12 +74,12 @@ public class ApplicationFile implements Serializable {
         ApplicationFile.iterator = iterator;
     }
 
-    public boolean isAccepted() {
-        return accepted;
+    public int getStatus() {
+        return status;
     }
 
-    public void setAccepted(boolean accepted) {
-        this.accepted = accepted;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public static int generateId() {

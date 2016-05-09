@@ -69,11 +69,11 @@ public class ConsoleView {
                         break;
                     case 3:
                         System.out.println("-------View Submitted Application-------");
-                        printMap(v.getSubmittedFiles());
+                        printList(v.getSubmittedFiles(false));
                         break;
                     case 4:
                         System.out.println("-------View Accepted Application-------");
-                        printMap(v.getAcceptedFiles());
+                        printList(v.getSubmittedFiles(true));
                         break;
                     case 5:
                         System.out.println("-------Accept Application-------");
@@ -247,7 +247,6 @@ public class ConsoleView {
         int menu = -1;
         do {
             try {
-                System.out.println("----------------------");
                 System.out.println("-------Main Menu------");
                 System.out.println("1. Show Vacancies");
                 System.out.println("2. Log In");
@@ -279,7 +278,8 @@ public class ConsoleView {
                         System.out.println("input email : ");
                         email = strIn.nextLine();
                         System.out.println("input password : ");
-                        password = app.md5(strIn.nextLine());;
+                        password = app.md5(strIn.nextLine());
+                        ;
                         System.out.println("input company name : ");
                         String name = strIn.nextLine();
                         app.register(0, email, password, name);
@@ -311,15 +311,13 @@ public class ConsoleView {
 
     }
 
-    private void printMap(Map<String, ApplicationFile> map) {
-        if (map.isEmpty()) {
+    private void printList(ApplicationFile[] list) {
+        if (list.length == 0) {
             System.out.println("Empty List");
         } else {
-            for (Map.Entry<String, ApplicationFile> entry : map.entrySet()) {
-                String key = entry.getKey();
-                ApplicationFile file = entry.getValue();
+            for (ApplicationFile file : list) {
                 System.out.println("application id:" + file.getApplicationId()
-                        + "\t applicant id:" + key
+                        + "\t applicant id:" + file.getName()
                         + "\t resume:" + file.getResume());
             }
         }
