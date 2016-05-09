@@ -202,18 +202,7 @@ public class ConsoleView {
                         break;
                     case 3:
                         System.out.println("---------Vacancy List---------");
-                        for (User u : app.getUsers()) {
-                            if (u instanceof Company) {
-                                Company c = (Company) u;
-                                System.out.println("Company : " + c.getName());
-                                for (Vacancy v : c.getActiveVacancy()) {
-                                    System.out.println(
-                                            "Vacancy ID:" + v.getVacancyId()
-                                            + "\tVacancy Name:" + v.getVacancyName()
-                                            + "\tDeadline:" + v.getDeadline());
-                                }
-                            }
-                        }
+                        showVacancy();
                         break;
                     case 4:
                         System.out.println("-------Apply Vacancy-------");
@@ -258,14 +247,19 @@ public class ConsoleView {
             try {
                 System.out.println("----------------------");
                 System.out.println("-------Main Menu------");
-                System.out.println("1. Log In");
-                System.out.println("2. Register Company");
-                System.out.println("3. Register Applicant");
+                System.out.println("1. Show Vacancies");
+                System.out.println("2. Log In");
+                System.out.println("3. Register Company");
+                System.out.println("4. Register Applicant");
                 System.out.println("0. Exit");
                 System.out.print("Input Menu : ");
                 menu = numIn.nextInt();
                 switch (menu) {
                     case 1:
+                        System.out.println("---------Vacancy List---------");
+                        showVacancy();
+                        break;
+                    case 2:
                         System.out.println("input email : ");
                         String email = strIn.nextLine();
                         System.out.println("input password : ");
@@ -279,7 +273,7 @@ public class ConsoleView {
                             companyMenu((Company) user);
                         }
                         break;
-                    case 2:
+                    case 3:
                         System.out.println("input email : ");
                         email = strIn.nextLine();
                         System.out.println("input password : ");
@@ -290,7 +284,7 @@ public class ConsoleView {
                         String address = strIn.nextLine();
                         app.register(0, email, password, name, address);
                         break;
-                    case 3:
+                    case 4:
                         System.out.println("input email : ");
                         email = strIn.nextLine();
                         System.out.println("input password : ");
@@ -318,7 +312,7 @@ public class ConsoleView {
 
     }
 
-    public void printMap(Map<String, ApplicationFile> map) {
+    private void printMap(Map<String, ApplicationFile> map) {
         if (map.isEmpty()) {
             System.out.println("Empty List");
         } else {
@@ -328,6 +322,21 @@ public class ConsoleView {
                 System.out.println("application id:" + file.getApplicationId()
                         + "\t applicant id:" + key
                         + "\t resume:" + file.getResume());
+            }
+        }
+    }
+
+    private void showVacancy() {
+        for (User u : app.getUsers()) {
+            if (u instanceof Company) {
+                Company c = (Company) u;
+                System.out.println("Company : " + c.getName());
+                for (Vacancy v : c.getActiveVacancy()) {
+                    System.out.println(
+                            "Vacancy ID:" + v.getVacancyId()
+                            + "\tVacancy Name:" + v.getVacancyName()
+                            + "\tDeadline:" + v.getDeadline());
+                }
             }
         }
     }
