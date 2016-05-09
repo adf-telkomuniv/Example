@@ -16,19 +16,21 @@ import java.util.List;
 public class Applicant extends User implements Serializable {
 
     private String lastEducation;
+    private char gender;
     private String expertise;
     private List<ApplicationFile> applicationFiles;
 
-    public Applicant(String email, String password) {
-        super(email, password);
+    public Applicant(String email, String password, String name) {
+        super(email, password, name);
         applicationFiles = new ArrayList();
     }
 
-    public Applicant(String lastEducation, String expertise, String email, String password) {
-        super(email, password);
+    public Applicant(String email, String password, String name, String lastEducation, String expertise, char gender) {
+        super(email, password, name);
         applicationFiles = new ArrayList();
         this.lastEducation = lastEducation;
         this.expertise = expertise;
+        this.gender = gender;
     }
 
     public String getLastEducation() {
@@ -47,11 +49,23 @@ public class Applicant extends User implements Serializable {
         this.expertise = expertise;
     }
 
+    public char getGender() {
+        return gender;
+    }
+
+    public void setGender(char gender) {
+        if (gender != 'm' && gender != 'f') {
+            throw new IllegalStateException("gender = m/f");
+        }
+        this.gender = gender;
+    }
+
     @Override
     public String toString() {
         return "Applicant{"
                 + "\n email=" + getEmail()
                 + "\n name=" + getName()
+                + "\n gender=" + (gender == 'm' ? "male" : "female")
                 + "\n address=" + getAddress()
                 + "\n lastEducation=" + lastEducation
                 + "\n  expertise=" + expertise

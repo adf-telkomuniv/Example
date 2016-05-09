@@ -14,12 +14,12 @@ import java.util.List;
  *
  * @author dee
  */
-public class Company extends User implements Serializable{
+public class Company extends User implements Serializable {
 
     private List<Vacancy> vacancyList;
 
-    public Company(String email, String password) {
-        super(email, password);
+    public Company(String email, String password, String name) {
+        super(email, password, name);
         vacancyList = new ArrayList();
     }
 

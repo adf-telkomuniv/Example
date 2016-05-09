@@ -7,6 +7,9 @@ package model;
 
 import data.Database;
 import data.FileIO;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -97,13 +100,15 @@ public class Application {
      *
      * @param applicant
      * @param name
+     * @param gender
      * @param address
      * @param lastEducation
      * @param expertise
      */
-    public void editProfile(Applicant applicant, String name, String address,
+    public void editProfile(Applicant applicant, String name, char gender, String address,
             String lastEducation, String expertise) {
         applicant.setName(name);
+        applicant.setGender(gender);
         applicant.setAddress(address);
         applicant.setLastEducation(lastEducation);
         applicant.setExpertise(expertise);
@@ -177,23 +182,20 @@ public class Application {
      * @param email
      * @param password
      * @param name
-     * @param address
      */
-    public void register(int option, String email, String password, String name, String address) {
+    public void register(int option, String email, String password, String name) {
         User user = searchUser(email);
         if (user == null) {
             switch (option) {
                 case 1:
-                    user = new Applicant(email, password);
+                    user = new Applicant(email, password, name);
                     break;
                 case 0:
-                    user = new Company(email, password);
+                    user = new Company(email, password, name);
                     break;
                 default:
                     throw new IllegalStateException("define option=1/0");
             }
-            user.setName(name);
-            user.setAddress(address);
             adduser(user);
         } else {
             throw new IllegalStateException("email already exists");
@@ -283,7 +285,6 @@ public class Application {
 //        } else if (saveMode == 2) {
 //        }
 //    }
-
     /**
      * save users list and log id to file
      */
@@ -303,4 +304,18 @@ public class Application {
         ApplicationFile.setIterator(log[1]);
     }
 
+    public static String md5(String input) {
+        String result = null;
+        if (input == null) {
+            return null;
+        }
+        try {
+            MessageDigest dgt = MessageDigest.getInstance("MD5");
+            dgt.update(input.getBytes(), 0, input.length());
+            result = new BigInteger(1, dgt.digest()).toString(16);
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException(e.getMessage());
+        }
+        return result;
+    }
 }

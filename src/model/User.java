@@ -11,16 +11,17 @@ import java.io.Serializable;
  *
  * @author dee
  */
-public abstract class User implements Serializable{
+public abstract class User implements Serializable {
 
     private String email;
     private String password;
     private String name;
     private String address;
 
-    public User(String email, String password) {
+    public User(String email, String password, String name) {
         this.email = email;
         this.password = password;
+        this.name = name;
     }
 
     public String getEmail() {

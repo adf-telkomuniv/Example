@@ -194,11 +194,13 @@ public class ConsoleView {
                         String name = strIn.nextLine();
                         System.out.println("input applicant address : ");
                         String address = strIn.nextLine();
+                        System.out.println("input gender (m/l): ");
+                        char gender = strIn.nextLine().charAt(0);
                         System.out.println("input applicant last Education : ");
                         String lastEducation = strIn.nextLine();
                         System.out.println("input applicant expertise : ");
                         String expertise = strIn.nextLine();
-                        app.editProfile(a, name, address, lastEducation, expertise);
+                        app.editProfile(a, name, gender, address, lastEducation, expertise);
                         break;
                     case 3:
                         System.out.println("---------Vacancy List---------");
@@ -263,7 +265,7 @@ public class ConsoleView {
                         System.out.println("input email : ");
                         String email = strIn.nextLine();
                         System.out.println("input password : ");
-                        String password = strIn.nextLine();
+                        String password = app.md5(strIn.nextLine());
                         User user = app.logIn(email, password);
                         if (user == null) {
                             System.out.println("Wrong email and password");
@@ -277,23 +279,20 @@ public class ConsoleView {
                         System.out.println("input email : ");
                         email = strIn.nextLine();
                         System.out.println("input password : ");
-                        password = strIn.nextLine();
+                        password = app.md5(strIn.nextLine());;
                         System.out.println("input company name : ");
                         String name = strIn.nextLine();
-                        System.out.println("input company address : ");
-                        String address = strIn.nextLine();
-                        app.register(0, email, password, name, address);
+                        app.register(0, email, password, name);
                         break;
                     case 4:
                         System.out.println("input email : ");
                         email = strIn.nextLine();
                         System.out.println("input password : ");
-                        password = strIn.nextLine();
+                        password = app.md5(strIn.nextLine());
                         System.out.println("input applicant name : ");
                         name = strIn.nextLine();
                         System.out.println("input applicant address : ");
-                        address = strIn.nextLine();
-                        app.register(1, email, password, name, address);
+                        app.register(1, email, password, name);
                         break;
                     case 0:
                         System.out.println("thank you");
