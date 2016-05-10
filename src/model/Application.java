@@ -12,7 +12,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -135,23 +137,38 @@ public class Application {
      * @return Vacancy, null if not found
      */
     public Vacancy getVacancy(int vacancyId) {
-//        load();
-        for (User u : users) {
-            if (u instanceof Company) {
-                Company c = (Company) u;
-                for (Vacancy v : c.getActiveVacancy()) {
-                    if (v.getVacancyId() == vacancyId) {
-                        return v;
-                    }
+//        load();        
+        for (Company c : getCompanyList()) {
+            for (Vacancy v : c.getActiveVacancy()) {
+                if (v.getVacancyId() == vacancyId) {
+                    return v;
                 }
             }
         }
         return null;
     }
 
+    public List<Company> getCompanyList() {
+        List<Company> companies = new ArrayList();
+        for (User u : users) {
+            if (u instanceof Company) {
+                companies.add((Company) u);
+            }
+        }
+        return companies;
+    }
+
+    public List<Vacancy> getVacancyList() {
+        List<Vacancy> vacancies = new ArrayList();
+        for (Company c : getCompanyList()) {
+            vacancies.addAll(c.getActiveVacancy());
+        }
+        return vacancies;
+    }
+
     // Main Menu
     /**
-     * Main Menu 1 - Log In
+     * Main Menu 2 - Log In
      *
      * @param email
      * @param password
@@ -176,7 +193,7 @@ public class Application {
     }
 
     /**
-     * Main Menu 2 - Register
+     * Main Menu 3,4 - Register
      *
      * @param option user type, 0 = Company, 1 = Applicant
      * @param email

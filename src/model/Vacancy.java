@@ -194,7 +194,7 @@ public class Vacancy implements Serializable {
                 + "\n vacancy name=" + vacancyName
                 + "\n vacancy detail=" + vacancyDetail
                 + "\n deadline=" + deadline
-                + "\n active=" + active
+                + "\n status=" + (active ? "active" : "closed")
                 + "\n}";
     }
 

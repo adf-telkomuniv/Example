@@ -16,7 +16,7 @@ import java.util.List;
 public class Applicant extends User implements Serializable {
 
     private String lastEducation;
-    private char gender;
+    private char gender = 'n';
     private String expertise;
     private List<ApplicationFile> applicationFiles;
 
@@ -65,7 +65,7 @@ public class Applicant extends User implements Serializable {
         return "Applicant{"
                 + "\n email=" + getEmail()
                 + "\n name=" + getName()
-                + "\n gender=" + (gender == 'm' ? "male" : gender == 'f' ? "female" : "na")
+                + "\n gender=" + (gender == 'm' ? "male" : gender == 'f' ? "female" : "n/a")
                 + "\n address=" + getAddress()
                 + "\n lastEducation=" + lastEducation
                 + "\n  expertise=" + expertise
