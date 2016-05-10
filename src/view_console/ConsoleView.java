@@ -8,7 +8,6 @@ package view_console;
 import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 import model.Applicant;
 import model.Company;
@@ -82,8 +81,12 @@ public class ConsoleView {
                         app.acceptApplication(v, applicationId);
                         break;
                     case 6:
-                        app.closeVacancy(v);
-                        System.out.println("Vacancy closed");
+                        System.out.println("Close Vacancy ? (y/n)");
+                        String confirm = strIn.nextLine();
+                        if (confirm.toLowerCase().startsWith("y")) {
+                            app.closeVacancy(v);
+                            System.out.println("Vacancy closed");
+                        }
                         break;
                     case 0:
                         break;
