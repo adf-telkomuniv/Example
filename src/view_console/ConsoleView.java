@@ -204,7 +204,7 @@ public class ConsoleView {
                         break;
                     case 3:
                         System.out.println("---------Vacancy List---------");
-                        showVacancy();
+                        showVacancy(a);
                         break;
                     case 4:
                         System.out.println("-------Apply Vacancy-------");
@@ -258,7 +258,7 @@ public class ConsoleView {
                 switch (menu) {
                     case 1:
                         System.out.println("---------Vacancy List---------");
-                        showVacancy();
+                        showVacancy(null);
                         break;
                     case 2:
                         System.out.println("input email : ");
@@ -323,18 +323,22 @@ public class ConsoleView {
         }
     }
 
-    private void showVacancy() {
-        for (User u : app.getUsers()) {
-            if (u instanceof Company) {
-                Company c = (Company) u;
-                System.out.println("Company : " + c.getName());
-                for (Vacancy v : c.getActiveVacancy()) {
-                    System.out.println(
-                            "Vacancy ID:" + v.getVacancyId()
-                            + "\tVacancy Name:" + v.getVacancyName()
-                            + "\tDeadline:" + v.getDeadline());
+    private void showVacancy(Applicant applicant) {
+        for (Company c : app.getCompanyList()) {
+            for (Vacancy v : c.getActiveVacancy()) {
+                System.out.print("Company:" + c.getName()
+                        + "\tVacancy ID:" + v.getVacancyId()
+                        + "\tVacancy Name:" + v.getVacancyName());
+                ApplicationFile file;
+                if (applicant != null && (file = v.getSubmittedFile(applicant.getEmail())) != null) {
+                    System.out.println("\tStatus : "
+                            + (file.getStatus() == 0 ? "submitted"
+                                    : file.getStatus() == 1 ? "accepted" : "rejected"));
+                } else {
+                    System.out.println("\tDeadline:" + v.getDeadline());
                 }
             }
         }
     }
+
 }
