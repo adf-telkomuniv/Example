@@ -57,7 +57,7 @@ public class ApplicationFile implements Serializable {
     @Override
     public String toString() {
         return "ApplicationFile{"
-                + "\n idApplication=" + applicationId
+                + "\n applicationId=" + applicationId
                 + "\n name=" + name
                 + "\n date_created=" + date_created
                 + "\n resume=" + resume
