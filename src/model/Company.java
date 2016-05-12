@@ -80,14 +80,10 @@ public class Company extends User implements Serializable {
 
     @Override
     public String toString() {
-//        return super.toString()
-//                + "\n\tCompany{"
-//                + "\n\t vacancyList=" + vacancyList
-//                + "\n\t}";
         return "Company{"
-                + "\n email=" + getEmail()
-                + "\n name=" + getName()
-                + "\n address=" + getAddress()
+                + "\n email = " + getEmail()
+                + "\n Company Name = " + getName()
+                + "\n Company Address = " + getAddress()
                 + "\n}";
     }
 

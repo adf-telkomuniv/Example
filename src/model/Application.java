@@ -30,19 +30,19 @@ public class Application {
         users = new ArrayList();
     }
 
-    // ======================== Vacancy Menu ========================
+    // ================================ Vacancy Menu ================================
     /**
      * Vacancy Menu 2 - Edit Vacancy Detail
      *
-     * @param vacancy
-     * @param name
-     * @param detail
-     * @param deadline
+     * @param vacancy vacancy object to be edited
+     * @param name new vacancy name
+     * @param detail new vacancy detail
+     * @param deadline new vacancy deadline
      * @throws java.sql.SQLException
      */
     public void editVacancy(Vacancy vacancy, String name, String detail, Date deadline) throws SQLException {
-        vacancy.setVacancyName(name);
-        vacancy.setVacancyDetail(detail);
+        vacancy.setName(name);
+        vacancy.setDetail(detail);
         vacancy.setDeadline(deadline);
         if (saveMode == 1) {
             saveFile();
@@ -54,9 +54,10 @@ public class Application {
     /**
      * Vacancy Menu 3,4 - Show Submitted List, Show Accepted List
      *
-     * @param vacancy
-     * @param accepted
-     * @return
+     * @param vacancy vacancy object
+     * @param accepted false = return submitted list, true = return accepted
+     * list
+     * @return array of String of application file
      * @throws java.sql.SQLException
      */
     public String[] getSubmittedFiles(Vacancy vacancy, boolean accepted) throws SQLException {
@@ -77,8 +78,8 @@ public class Application {
     /**
      * Vacancy Menu 5 - Accept Application File
      *
-     * @param vacancy
-     * @param applicationId
+     * @param vacancy vacancy object
+     * @param applicationId application id to be accepted
      * @throws java.sql.SQLException
      */
     public void acceptApplication(Vacancy vacancy, int applicationId) throws SQLException {
@@ -101,7 +102,7 @@ public class Application {
     /**
      * Vacancy Menu 6 - Close Vacancy,
      *
-     * @param vacancy
+     * @param vacancy vacancy object to be closed
      * @throws java.sql.SQLException
      */
     public void closeVacancy(Vacancy vacancy) throws SQLException {
@@ -114,13 +115,13 @@ public class Application {
 
     }
 
-    // ======================== Company Menu ========================
+    // ================================ Company Menu ================================
     /**
      * Company Menu 2 - Edit Company Profile
      *
-     * @param company
-     * @param name
-     * @param address
+     * @param company company object to be edited
+     * @param name new company name
+     * @param address new company address
      * @throws java.sql.SQLException
      */
     public void editCompany(Company company, String name, String address) throws SQLException {
@@ -136,8 +137,8 @@ public class Application {
     /**
      * Company Menu 3 - View Vacancy List
      *
-     * @param company
-     * @return
+     * @param company company object
+     * @return list of vacancy
      * @throws java.sql.SQLException
      */
     public List<Vacancy> getVacancyList(Company company) throws SQLException {
@@ -150,9 +151,9 @@ public class Application {
     /**
      * Company Menu 4 - Create new Vacancy
      *
-     * @param company
-     * @param vacancyName
-     * @param deadline
+     * @param company company object
+     * @param vacancyName new vacancy name
+     * @param deadline new vacancy deadline
      * @throws java.sql.SQLException
      */
     public void createVacancy(Company company, String vacancyName, Date deadline) throws SQLException {
@@ -165,11 +166,11 @@ public class Application {
     }
 
     /**
-     * Company Menu 5 - Select Vacancy
+     * Company Menu 5 - Select Vacancy by Id
      *
-     * @param company
-     * @param idVacancy
-     * @return
+     * @param company company object
+     * @param idVacancy vacancy id
+     * @return vacancy object
      * @throws java.sql.SQLException
      */
     public Vacancy searchVacancy(Company company, int idVacancy) throws SQLException {
@@ -183,16 +184,17 @@ public class Application {
         return null;
     }
 
-    // ======================== Applicant Menu ========================
+    // ================================ Applicant Menu ================================
     /**
      * Applicant Menu 2 - Edit Applicant Profile
      *
-     * @param applicant
-     * @param name
-     * @param gender
-     * @param address
-     * @param lastEducation
-     * @param expertise
+     * @param applicant applicant object to be edited
+     * @param name new applicant name
+     * @param gender new applicant gender
+     * @param address new applicant address
+     * @param lastEducation new applicant last education
+     * @param expertise new applicant expertise
+     * @throws java.sql.SQLException
      */
     public void editProfile(Applicant applicant, String name, char gender, String address,
             String lastEducation, String expertise) throws SQLException {
@@ -211,8 +213,8 @@ public class Application {
     /**
      * Applicant Menu 3 - Vacancy List
      *
-     * @param applicant
-     * @return
+     * @param applicant applicant object
+     * @return array of string of available vacancy
      * @throws SQLException
      */
     public String[] getAvailableVacancyList(Applicant applicant) throws SQLException {
@@ -228,7 +230,7 @@ public class Application {
                     String s = "";
                     s += "Company:" + c.getName()
                             + "\tVacancy ID:" + v.getVacancyId()
-                            + "\tVacancy Name:" + v.getVacancyName();
+                            + "\tVacancy Name:" + v.getName();
                     ApplicationFile file;
                     if (applicant != null && (file = v.getSubmittedFile(applicant.getEmail())) != null) {
                         s += ("\tStatus : "
@@ -247,9 +249,10 @@ public class Application {
     /**
      * Applicant Menu 4 - Apply Vacancy
      *
-     * @param applicant
-     * @param vacancy
-     * @param resume
+     * @param applicant applicant object
+     * @param vacancy vacancy object
+     * @param resume new application resume
+     * @throws java.sql.SQLException
      */
     public void applyJob(Applicant applicant, Vacancy vacancy, String resume) throws SQLException {
         ApplicationFile file = applicant.createApplicationFile(resume);
@@ -265,8 +268,9 @@ public class Application {
     /**
      * get Vacancy by ID, used for Apply Vacancy
      *
-     * @param vacancyId
-     * @return Vacancy, null if not found
+     * @param vacancyId vacancy id
+     * @return Vacancy object, null if not found
+     * @throws java.sql.SQLException
      */
     public Vacancy getVacancy(int vacancyId) throws SQLException {
         if (saveMode == 2) {
@@ -285,8 +289,8 @@ public class Application {
     /**
      * Applicant Menu 5 - Application File List
      *
-     * @param applicant
-     * @return
+     * @param applicant applicant object
+     * @return array of string of application file list
      * @throws SQLException
      */
     public String[] getApplicationFiles(Applicant applicant) throws SQLException {
@@ -305,7 +309,7 @@ public class Application {
     /**
      * Get Company List
      *
-     * @return
+     * @return list of company object
      */
     public List<Company> getCompanyList() {
         List<Company> companies = new ArrayList();
@@ -319,11 +323,12 @@ public class Application {
 
     // Main Menu
     /**
-     * Main Menu 2 - Log In
+     * Main Menu 2 - Log In, verifying user account
      *
-     * @param email
-     * @param password
-     * @return User, null if not found
+     * @param email user email
+     * @param password user password
+     * @return User object, null if not found
+     * @throws java.sql.SQLException
      */
     public User logIn(String email, String password) throws SQLException {
         User user = searchUser(email);
@@ -333,6 +338,13 @@ public class Application {
         return null;
     }
 
+    /**
+     * search user object by email
+     *
+     * @param email user email
+     * @return User object, null if not found
+     * @throws SQLException
+     */
     public User searchUser(String email) throws SQLException {
         if (saveMode == 2) {
             return database.loadUser(email);
@@ -350,9 +362,9 @@ public class Application {
      * Main Menu 3,4 - Register
      *
      * @param option user type, 0 = Company, 1 = Applicant
-     * @param email
-     * @param password
-     * @param name
+     * @param email new user email
+     * @param password new user password
+     * @param name new user name
      * @throws java.sql.SQLException
      */
     public void register(int option, String email, String password, String name) throws SQLException {
@@ -382,6 +394,7 @@ public class Application {
             throw new IllegalStateException("email already exists");
         }
     }
+// =============================================================================
 
     /**
      * set save mode
@@ -406,6 +419,8 @@ public class Application {
                 String dbuser = "root";
                 String dbpasswd = "";
                 database = new Database(server, dbuser, dbpasswd);
+                database.connect();
+                break;
             default:
                 throw new AssertionError("specify save mode : 0/1/2");
         }

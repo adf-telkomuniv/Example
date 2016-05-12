@@ -91,11 +91,11 @@ public class Database {
     public void saveVacancy(Company company, Vacancy vacancy) throws SQLException {
         String query = "insert into vacancies (name, detail, deadline, active, companyemail) "
                 + "values ("
-                + "'" + vacancy.getVacancyName() + "', "
-                + "'" + vacancy.getVacancyDetail() + "', "
+                + "'" + vacancy.getName() + "', "
+                + "'" + vacancy.getDetail() + "', "
                 + "'" + new java.sql.Date(vacancy.getDeadline().getTime()) + "', "
                 + vacancy.isActive() + ", "
-                + "'" + company.getEmail() + "', "
+                + "'" + company.getEmail() + "' "
                 + ")";
         statement.execute(query, Statement.RETURN_GENERATED_KEYS);
         ResultSet rs = statement.getGeneratedKeys();
@@ -117,7 +117,7 @@ public class Database {
     }
 
     public void updateUser(User user) throws SQLException {
-        String query = "update user set "
+        String query = "update users set "
                 + "password = '" + user.getPassword() + "', "
                 + "name = '" + user.getName() + "', "
                 + "address = '" + user.getAddress() + "' "
@@ -136,7 +136,7 @@ public class Database {
     }
 
     public void updateApplication(ApplicationFile file) throws SQLException {
-        String query = "update applicationfile set "
+        String query = "update applicationfiles set "
                 + "name='" + file.getName() + "', "
                 + "resume='" + file.getResume() + "', "
                 + "status=" + file.getStatus() + " "
@@ -145,12 +145,12 @@ public class Database {
     }
 
     public void updateVacancy(Vacancy vacancy) throws SQLException {
-        String query = "update applicants set "
-                + "name='" + vacancy.getVacancyName() + "', "
-                + "detail='" + vacancy.getVacancyDetail() + "', "
+        String query = "update vacancies set "
+                + "name='" + vacancy.getName() + "', "
+                + "detail='" + vacancy.getDetail() + "', "
                 + "deadline='" + new java.sql.Date(vacancy.getDeadline().getTime()) + "', "
                 + "active= " + vacancy.isActive() + " "
-                + "where vacancyid=" + vacancy.getVacancyId();
+                + "where vacancyId=" + vacancy.getVacancyId();
         statement.executeUpdate(query);
     }
 
@@ -182,23 +182,23 @@ public class Database {
     public User loadUser(String email) throws SQLException {
         User u = null;
         String query = "SELECT "
-                + "lastEducation, expertise, gender "
-                + "FROM applicants "
-                + "WHERE email = '" + email + "'";
+                + "password, name, address, lastEducation, expertise, gender "
+                + "FROM applicants a, users u "
+                + "WHERE a.email = u.email and a.email = '" + email + "'";
         ResultSet rs = statement.executeQuery(query);
+        while (rs.next()) {
+            u = new Applicant(email, rs.getString(1), rs.getString(2),
+                    rs.getString(3), rs.getString(4), rs.getString(5),
+                    rs.getString(6).charAt(0));
+        }
+        if (u != null) {
+            return u;
+        }
 
         query = "select password, name, address from users where email = '" + email + "'";
-        ResultSet rs2 = statement.executeQuery(query);
-
+        rs = statement.executeQuery(query);
         while (rs.next()) {
-            while (rs2.next()) {
-                u = new Applicant(email, rs2.getString(1), rs2.getString(2),
-                        rs2.getString(3), rs.getString(1), rs.getString(2),
-                        rs.getString(3).charAt(0));
-            }
-        }
-        if (u == null) {
-            u = new Company(email, rs2.getString(1), rs2.getString(2), rs2.getString(3));
+            u = new Company(email, rs.getString(1), rs.getString(2), rs.getString(3));
         }
         return u;
     }
@@ -267,7 +267,7 @@ public class Database {
     public List<Company> loadAvailableVacancyList(Applicant applicant) throws SQLException {
         Map<Integer, ApplicationFile> files = new HashMap();
         Map<String, Company> companies = new HashMap();
-        String query = "select (email,password,name,address) from users where email not in (select email from applicants)";
+        String query = "select email, password, name, address from users where email not in (select email from applicants)";
         ResultSet rs = statement.executeQuery(query);
         while (rs.next()) {
             companies.put(rs.getString(1), new Company(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4)));

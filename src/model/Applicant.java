@@ -63,12 +63,12 @@ public class Applicant extends User implements Serializable {
     @Override
     public String toString() {
         return "Applicant{"
-                + "\n email=" + getEmail()
-                + "\n name=" + getName()
-                + "\n gender=" + (gender == 'm' ? "male" : gender == 'f' ? "female" : "n/a")
-                + "\n address=" + getAddress()
-                + "\n lastEducation=" + lastEducation
-                + "\n  expertise=" + expertise
+                + "\n email = " + getEmail()
+                + "\n Applicant Name = " + getName()
+                + "\n Gender = " + (gender == 'm' ? "male" : gender == 'f' ? "female" : "n/a")
+                + "\n Applicant Address = " + getAddress()
+                + "\n Last Education = " + lastEducation
+                + "\n Applicant Expertise = " + expertise
                 + "\n}";
     }
 

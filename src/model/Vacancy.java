@@ -21,66 +21,51 @@ public class Vacancy implements Serializable {
     private static int iterator;
 
     private int vacancyId;
-    private String vacancyName;
-    private String vacancyDetail;
+    private String name;
+    private String detail;
     private Date deadline;
     private boolean active;
 
     private Map<String, ApplicationFile> submittedFiles;
-//    private Map<String, ApplicationFile> acceptedFiles;
 
     public Vacancy(String vacancyName, Date deadline) {
-        this.vacancyName = vacancyName;
+        this.name = vacancyName;
         this.deadline = deadline;
         submittedFiles = new HashMap();
-//        acceptedFiles = new HashMap();
         active = true;
     }
 
     public Vacancy(int idVacancy, String vacancyName, Date deadline) {
         this.vacancyId = idVacancy;
-        this.vacancyName = vacancyName;
+        this.name = vacancyName;
         this.deadline = deadline;
         submittedFiles = new HashMap();
-//        acceptedFiles = new HashMap();
         active = true;
     }
 
     public Vacancy(int vacancyId, String vacancyName, Date deadline, String vacancyDetail, boolean active) {
         this.vacancyId = vacancyId;
-        this.vacancyName = vacancyName;
-        this.vacancyDetail = vacancyDetail;
+        this.name = vacancyName;
+        this.detail = vacancyDetail;
         this.deadline = deadline;
         this.active = active;
         submittedFiles = new HashMap();
     }
 
-    public String getVacancyDetail() {
-        return vacancyDetail;
+    public String getDetail() {
+        return detail;
     }
 
-    public void setVacancyDetail(String vacancyDetail) {
-        this.vacancyDetail = vacancyDetail;
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
 
-////    public void acceptFile(String username) {
-////        ApplicationFile a = removeSubmittedFile(username);
-////        addAcceptedFile(username, a);
-////    }
-//    public void acceptFile(int applicationId) {
-//        ApplicationFile file = getSubmittedFile(applicationId);
-//        if (file != null) {
-//            file.setStatus(1);
-//        } else {
-//            throw new IllegalStateException("Application File not found");
-//        }
-//    }
-    public String getVacancyName() {
-        return vacancyName;
+    public String getName() {
+        return name;
     }
 
-    public void setVacancyName(String vacancyName) {
-        this.vacancyName = vacancyName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Date getDeadline() {
@@ -147,43 +132,6 @@ public class Vacancy implements Serializable {
         return null;
     }
 
-//    public Map<String, ApplicationFile> getAcceptedFiles() {
-//        return acceptedFiles;
-//    }
-//    public void setAcceptedFiles(Map<String, ApplicationFile> submittedFiles) {
-//        this.acceptedFiles = submittedFiles;
-//    }
-//    public void addAcceptedFile(String username, ApplicationFile file) {
-//        acceptedFiles.put(username, file);
-//    }
-//    public ApplicationFile getAcceptedFile(String username) {
-//        return acceptedFiles.get(username);
-//    }
-//    public Object[] getAcceptedFile(int applicationId) {
-//        for (Map.Entry<String, ApplicationFile> entry : acceptedFiles.entrySet()) {
-//            String username = entry.getKey();
-//            ApplicationFile file = entry.getValue();
-//            if (file.getApplicationId() == applicationId) {
-//                return new Object[]{username, file};
-//            }
-//        }
-//        return null;
-//    }
-//    public ApplicationFile removeAcceptedFile(String username) {
-//        ApplicationFile file = acceptedFiles.remove(username);
-//        return file;
-//    }
-//    public Object[] removeAcceptedFile(int applicationId) {
-//        for (Map.Entry<String, ApplicationFile> entry : acceptedFiles.entrySet()) {
-//            String username = entry.getKey();
-//            ApplicationFile file = entry.getValue();
-//            if (file.getApplicationId() == applicationId) {
-//                acceptedFiles.remove(username);
-//                return new Object[]{username, file};
-//            }
-//        }
-//        return null;
-//    }
     public boolean isActive() {
         return active;
     }
@@ -203,11 +151,11 @@ public class Vacancy implements Serializable {
     @Override
     public String toString() {
         return "Vacancy{"
-                + "\n vacancy Id=" + vacancyId
-                + "\n vacancy name=" + vacancyName
-                + "\n vacancy detail=" + vacancyDetail
-                + "\n deadline=" + deadline
-                + "\n status=" + (active ? "active" : "closed")
+                + "\n Vacancy Id = " + vacancyId
+                + "\n Vacancy Name = " + name
+                + "\n Vacancy Detail = " + detail
+                + "\n Deadline = " + deadline
+                + "\n Status = " + (active ? "active" : "closed")
                 + "\n}";
     }
 

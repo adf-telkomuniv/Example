@@ -22,10 +22,6 @@ public class ApplicationFile implements Serializable {
     private String resume;
     private int status;
 
-//    public ApplicationFile(int idApplication) {
-//        this.applicationId = idApplication;
-//        date_created = new Date();
-//    }
     public ApplicationFile(int idApplication, String name, String resume) {
         this.applicationId = idApplication;
         date_created = new Date();
@@ -65,11 +61,11 @@ public class ApplicationFile implements Serializable {
     @Override
     public String toString() {
         return "ApplicationFile{"
-                + "\n applicationId=" + applicationId
-                + "\n name=" + name
-                + "\n date_created=" + date_created
-                + "\n resume=" + resume
-                + "\n status = " + (status == 0 ? "submitted" : status == 1 ? "accepted" : "rejected")
+                + "\n Application Id = " + applicationId
+                + "\n Application Name = " + name
+                + "\n Date Created = " + date_created
+                + "\n Resume = " + resume
+                + "\n Status = " + (status == 0 ? "submitted" : status == 1 ? "accepted" : "rejected")
                 + "\n}";
 
     }
