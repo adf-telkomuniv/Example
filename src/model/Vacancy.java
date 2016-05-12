@@ -46,6 +46,15 @@ public class Vacancy implements Serializable {
         active = true;
     }
 
+    public Vacancy(int vacancyId, String vacancyName, Date deadline, String vacancyDetail, boolean active) {
+        this.vacancyId = vacancyId;
+        this.vacancyName = vacancyName;
+        this.vacancyDetail = vacancyDetail;
+        this.deadline = deadline;
+        this.active = active;
+        submittedFiles = new HashMap();
+    }
+
     public String getVacancyDetail() {
         return vacancyDetail;
     }
@@ -54,19 +63,18 @@ public class Vacancy implements Serializable {
         this.vacancyDetail = vacancyDetail;
     }
 
-//    public void acceptFile(String username) {
-//        ApplicationFile a = removeSubmittedFile(username);
-//        addAcceptedFile(username, a);
+////    public void acceptFile(String username) {
+////        ApplicationFile a = removeSubmittedFile(username);
+////        addAcceptedFile(username, a);
+////    }
+//    public void acceptFile(int applicationId) {
+//        ApplicationFile file = getSubmittedFile(applicationId);
+//        if (file != null) {
+//            file.setStatus(1);
+//        } else {
+//            throw new IllegalStateException("Application File not found");
+//        }
 //    }
-    public void acceptFile(int applicationId) {
-        ApplicationFile file = getSubmittedFile(applicationId);
-        if (file != null) {
-            file.setStatus(1);
-        } else {
-            throw new IllegalStateException("Application File not found");
-        }
-    }
-
     public String getVacancyName() {
         return vacancyName;
     }
@@ -87,7 +95,7 @@ public class Vacancy implements Serializable {
         return submittedFiles;
     }
 
-    public ApplicationFile[] getSubmittedFiles(boolean accepted) {
+    public List<ApplicationFile> getSubmittedFiles(boolean accepted) {
         List<ApplicationFile> list = new ArrayList();
         for (Map.Entry<String, ApplicationFile> entry : submittedFiles.entrySet()) {
             ApplicationFile file = entry.getValue();
@@ -95,7 +103,8 @@ public class Vacancy implements Serializable {
                 list.add(file);
             }
         }
-        return list.stream().toArray(size -> new ApplicationFile[size]);
+//        return list.stream().toArray(size -> new ApplicationFile[size]);
+        return list;
     }
 
     public void setSubmittedFiles(Map<String, ApplicationFile> submittedFiles) {
@@ -185,6 +194,10 @@ public class Vacancy implements Serializable {
 
     public int getVacancyId() {
         return vacancyId;
+    }
+
+    public void setVacancyId(int vacancyId) {
+        this.vacancyId = vacancyId;
     }
 
     @Override

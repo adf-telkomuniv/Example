@@ -23,12 +23,21 @@ public class Company extends User implements Serializable {
         vacancyList = new ArrayList();
     }
 
-    public void createVacancy(String vacancyName, Date deadline) {
-        vacancyList.add(new Vacancy(vacancyName, deadline));
+    public Company(String email, String password, String name, String address) {
+        super(email, password, name, address);
+        vacancyList = new ArrayList();
     }
 
-    public void createVacancy(int idVacancy, String vacancyName, Date deadline) {
-        vacancyList.add(new Vacancy(idVacancy, vacancyName, deadline));
+    public Vacancy createVacancy(String vacancyName, Date deadline) {
+        Vacancy v = new Vacancy(vacancyName, deadline);
+        vacancyList.add(v);
+        return v;
+    }
+
+    public Vacancy createVacancy(int idVacancy, String vacancyName, Date deadline) {
+        Vacancy v = new Vacancy(idVacancy, vacancyName, deadline);
+        vacancyList.add(v);
+        return v;
     }
 
     public Vacancy getVacancy(int i) {

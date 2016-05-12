@@ -1,6 +1,6 @@
 /*
  * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
+ * To change this template fileIO, choose Tools | Templates
  * and open the template in the editor.
  */
 package model;
@@ -10,11 +10,10 @@ import data.FileIO;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -24,14 +23,14 @@ public class Application {
 
     private List<User> users;
     private int saveMode = 0;
-    FileIO file;
+    FileIO fileIO;
     Database database;
 
     public Application() {
         users = new ArrayList();
     }
 
-    // Vacancy Menu
+    // ======================== Vacancy Menu ========================
     /**
      * Vacancy Menu 2 - Edit Vacancy Detail
      *
@@ -39,13 +38,40 @@ public class Application {
      * @param name
      * @param detail
      * @param deadline
+     * @throws java.sql.SQLException
      */
-    public void editVacancy(Vacancy vacancy,
-            String name, String detail, Date deadline) {
+    public void editVacancy(Vacancy vacancy, String name, String detail, Date deadline) throws SQLException {
         vacancy.setVacancyName(name);
         vacancy.setVacancyDetail(detail);
         vacancy.setDeadline(deadline);
-        save();
+        if (saveMode == 1) {
+            saveFile();
+        } else if (saveMode == 2) {
+            database.updateVacancy(vacancy);
+        }
+    }
+
+    /**
+     * Vacancy Menu 3,4 - Show Submitted List, Show Accepted List
+     *
+     * @param vacancy
+     * @param accepted
+     * @return
+     * @throws java.sql.SQLException
+     */
+    public String[] getSubmittedFiles(Vacancy vacancy, boolean accepted) throws SQLException {
+        List<ApplicationFile> files = vacancy.getSubmittedFiles(accepted);
+        if (saveMode == 2) {
+            files = database.loadSubmittedFiles(vacancy, accepted);
+        }
+        String[] s = new String[files.size()];
+        for (int i = 0; i < s.length; i++) {
+            s[i] = "application id:" + files.get(i).getApplicationId()
+                    + "\t applicant id:" + files.get(i).getName()
+                    + "\t resume:" + files.get(i).getResume();
+
+        }
+        return s;
     }
 
     /**
@@ -53,34 +79,72 @@ public class Application {
      *
      * @param vacancy
      * @param applicationId
+     * @throws java.sql.SQLException
      */
-    public void acceptApplication(Vacancy vacancy, int applicationId) {
-        vacancy.acceptFile(applicationId);
-        save();
+    public void acceptApplication(Vacancy vacancy, int applicationId) throws SQLException {
+        ApplicationFile file = vacancy.getSubmittedFile(applicationId);
+        if (saveMode == 2) {
+            file = database.loadSubmitted(vacancy, applicationId);
+        }
+        if (file != null) {
+            file.setStatus(1);
+            if (saveMode == 1) {
+                saveFile();
+            } else if (saveMode == 2) {
+                database.updateApplication(file);
+            }
+        } else {
+            throw new IllegalStateException("Application File not found");
+        }
     }
 
     /**
      * Vacancy Menu 6 - Close Vacancy,
      *
      * @param vacancy
+     * @throws java.sql.SQLException
      */
-    public void closeVacancy(Vacancy vacancy) {
+    public void closeVacancy(Vacancy vacancy) throws SQLException {
         vacancy.setActive(false);
-        save();
+        if (saveMode == 1) {
+            saveFile();
+        } else if (saveMode == 2) {
+            database.updateVacancy(vacancy);
+        }
+
     }
 
-    // Company Menu
+    // ======================== Company Menu ========================
     /**
      * Company Menu 2 - Edit Company Profile
      *
      * @param company
      * @param name
      * @param address
+     * @throws java.sql.SQLException
      */
-    public void editCompany(Company company, String name, String address) {
+    public void editCompany(Company company, String name, String address) throws SQLException {
         company.setName(name);
         company.setAddress(address);
-        save();
+        if (saveMode == 1) {
+            saveFile();
+        } else if (saveMode == 2) {
+            database.updateUser(company);
+        }
+    }
+
+    /**
+     * Company Menu 3 - View Vacancy List
+     *
+     * @param company
+     * @return
+     * @throws java.sql.SQLException
+     */
+    public List<Vacancy> getVacancyList(Company company) throws SQLException {
+        if (saveMode == 2) {
+            return database.loadVacancyList(company);
+        }
+        return company.getVacancyList();
     }
 
     /**
@@ -89,14 +153,37 @@ public class Application {
      * @param company
      * @param vacancyName
      * @param deadline
+     * @throws java.sql.SQLException
      */
-    public void createVacancy(Company company,
-            String vacancyName, Date deadline) {
-        company.createVacancy(Vacancy.generateId(), vacancyName, deadline);
-        save();
+    public void createVacancy(Company company, String vacancyName, Date deadline) throws SQLException {
+        Vacancy vacancy = company.createVacancy(Vacancy.generateId(), vacancyName, deadline);
+        if (saveMode == 1) {
+            saveFile();
+        } else if (saveMode == 2) {
+            database.saveVacancy(company, vacancy);
+        }
     }
 
-    // Applicant Menu
+    /**
+     * Company Menu 5 - Select Vacancy
+     *
+     * @param company
+     * @param idVacancy
+     * @return
+     * @throws java.sql.SQLException
+     */
+    public Vacancy searchVacancy(Company company, int idVacancy) throws SQLException {
+        Vacancy vacancy = company.searchVacancy(idVacancy);
+        if (saveMode == 2) {
+            vacancy = database.loadVacancy(company, idVacancy);
+        }
+        if (vacancy != null) {
+            return vacancy;
+        }
+        return null;
+    }
+
+    // ======================== Applicant Menu ========================
     /**
      * Applicant Menu 2 - Edit Applicant Profile
      *
@@ -108,36 +195,83 @@ public class Application {
      * @param expertise
      */
     public void editProfile(Applicant applicant, String name, char gender, String address,
-            String lastEducation, String expertise) {
+            String lastEducation, String expertise) throws SQLException {
         applicant.setName(name);
         applicant.setGender(gender);
         applicant.setAddress(address);
         applicant.setLastEducation(lastEducation);
         applicant.setExpertise(expertise);
-        save();
+        if (saveMode == 1) {
+            saveFile();
+        } else if (saveMode == 2) {
+            database.updateApplicant(applicant);
+        }
+    }
+
+    /**
+     * Applicant Menu 3 - Vacancy List
+     *
+     * @param applicant
+     * @return
+     * @throws SQLException
+     */
+    public String[] getAvailableVacancyList(Applicant applicant) throws SQLException {
+        List<String> list = new ArrayList();
+        List<Company> companies = getCompanyList();
+        if (saveMode == 2) {
+            companies = database.loadAvailableVacancyList(applicant);
+        }
+        for (Company c : companies) {
+            List<Vacancy> vacancies = c.getActiveVacancy();
+            if (vacancies.size() > 0) {
+                for (Vacancy v : vacancies) {
+                    String s = "";
+                    s += "Company:" + c.getName()
+                            + "\tVacancy ID:" + v.getVacancyId()
+                            + "\tVacancy Name:" + v.getVacancyName();
+                    ApplicationFile file;
+                    if (applicant != null && (file = v.getSubmittedFile(applicant.getEmail())) != null) {
+                        s += ("\tStatus : "
+                                + (file.getStatus() == 0 ? "submitted"
+                                        : file.getStatus() == 1 ? "accepted" : "rejected"));
+                    } else {
+                        s += ("\tDeadline:" + v.getDeadline());
+                    }
+                    list.add(s);
+                }
+            }
+        }
+        return list.toArray(new String[list.size()]);
     }
 
     /**
      * Applicant Menu 4 - Apply Vacancy
      *
      * @param applicant
-     * @param v
+     * @param vacancy
      * @param resume
      */
-    public void applyJob(Applicant applicant, Vacancy v, String resume) {
-        ApplicationFile appFile = applicant.createApplicationFile(resume);
-        v.addSubmittedFile(applicant.getEmail(), appFile);
-        save();
+    public void applyJob(Applicant applicant, Vacancy vacancy, String resume) throws SQLException {
+        ApplicationFile file = applicant.createApplicationFile(resume);
+        vacancy.addSubmittedFile(applicant.getEmail(), file);
+        if (saveMode == 1) {
+            saveFile();
+        } else if (saveMode == 2) {
+            database.saveApplication(applicant, file);
+            database.saveSubmitted(applicant, vacancy, file);
+        }
     }
 
     /**
-     * get Vacancy by ID
+     * get Vacancy by ID, used for Apply Vacancy
      *
      * @param vacancyId
      * @return Vacancy, null if not found
      */
-    public Vacancy getVacancy(int vacancyId) {
-//        load();        
+    public Vacancy getVacancy(int vacancyId) throws SQLException {
+        if (saveMode == 2) {
+            return database.loadVacancy(null, vacancyId);
+        }
         for (Company c : getCompanyList()) {
             for (Vacancy v : c.getActiveVacancy()) {
                 if (v.getVacancyId() == vacancyId) {
@@ -148,6 +282,31 @@ public class Application {
         return null;
     }
 
+    /**
+     * Applicant Menu 5 - Application File List
+     *
+     * @param applicant
+     * @return
+     * @throws SQLException
+     */
+    public String[] getApplicationFiles(Applicant applicant) throws SQLException {
+        List<ApplicationFile> files = applicant.getApplicationFiles();
+        if (saveMode == 2) {
+            files = database.loadApplicationList(applicant);
+        }
+        String[] s = new String[files.size()];
+        for (int i = 0; i < s.length; i++) {
+            s[i] = files.get(i).toString();
+
+        }
+        return s;
+    }
+
+    /**
+     * Get Company List
+     *
+     * @return
+     */
     public List<Company> getCompanyList() {
         List<Company> companies = new ArrayList();
         for (User u : users) {
@@ -158,14 +317,6 @@ public class Application {
         return companies;
     }
 
-    public List<Vacancy> getVacancyList() {
-        List<Vacancy> vacancies = new ArrayList();
-        for (Company c : getCompanyList()) {
-            vacancies.addAll(c.getActiveVacancy());
-        }
-        return vacancies;
-    }
-
     // Main Menu
     /**
      * Main Menu 2 - Log In
@@ -174,7 +325,7 @@ public class Application {
      * @param password
      * @return User, null if not found
      */
-    public User logIn(String email, String password) {
+    public User logIn(String email, String password) throws SQLException {
         User user = searchUser(email);
         if (user != null && user.getPassword().equals(password)) {
             return user;
@@ -182,8 +333,11 @@ public class Application {
         return null;
     }
 
-    public User searchUser(String email) {
-//        load();
+    public User searchUser(String email) throws SQLException {
+        if (saveMode == 2) {
+            return database.loadUser(email);
+        }
+
         for (User user : users) {
             if (user.getEmail().equals(email)) {
                 return user;
@@ -199,8 +353,9 @@ public class Application {
      * @param email
      * @param password
      * @param name
+     * @throws java.sql.SQLException
      */
-    public void register(int option, String email, String password, String name) {
+    public void register(int option, String email, String password, String name) throws SQLException {
         User user = searchUser(email);
         if (user == null) {
             switch (option) {
@@ -213,57 +368,29 @@ public class Application {
                 default:
                     throw new IllegalStateException("define option=1/0");
             }
-            adduser(user);
+            users.add(user);
+            if (saveMode == 1) {
+                saveFile();
+            } else if (saveMode == 2) {
+                if (user instanceof Applicant) {
+                    database.saveApplicant((Applicant) user);
+                } else {
+                    database.saveUser(user);
+                }
+            }
         } else {
             throw new IllegalStateException("email already exists");
         }
     }
 
     /**
-     *
-     * @return list of User
-     */
-    public List<User> getUsers() {
-        return users;
-    }
-
-    /**
-     *
-     * @param users list of User
-     */
-    public void setUsers(List<User> users) {
-        this.users = users;
-        save();
-    }
-
-    /**
-     * add user to users list
-     *
-     * @param user new user
-     */
-    public void adduser(User user) {
-        users.add(user);
-        save();
-    }
-
-    /**
-     * get i-th user from users list
-     *
-     * @param i
-     * @return i-th user
-     */
-    public User getUser(int i) {
-        return users.get(i);
-    }
-
-    /**
      * set save mode
      *
-     * @param saveMode save mode, 0 = no save, 1 = file, 2 = database, 3 = ORM
+     * @param saveMode save mode, 0 = no save, 1 = fileIO, 2 = database, 3 = ORM
      */
     public void setSaveMode(int saveMode) {
         this.saveMode = saveMode;
-        file = null;
+        fileIO = null;
         database = null;
         switch (saveMode) {
             case 0:
@@ -271,11 +398,11 @@ public class Application {
             case 1:
                 String filename = "data.dat";
                 String fileLog = "log.dat";
-                file = new FileIO(filename, fileLog);
+                fileIO = new FileIO(filename, fileLog);
                 loadFile();
                 break;
             case 2:
-                String server = "jdbc:mysql://localhost:3306/test";
+                String server = "jdbc:mysql://localhost:3306/jobvacancy";
                 String dbuser = "root";
                 String dbpasswd = "";
                 database = new Database(server, dbuser, dbpasswd);
@@ -288,38 +415,30 @@ public class Application {
         return saveMode;
     }
 
-    private void save() {
-        if (saveMode == 1) {
-            saveFile();
-        } else if (saveMode == 2) {
-        }
-        System.out.println("saved");
-    }
-
-//    private void load() {
-//        if (saveMode == 1) {
-//            loadFile();
-//        } else if (saveMode == 2) {
-//        }
-//    }
     /**
-     * save users list and log id to file
+     * save users list and log id to fileIO
      */
     private void saveFile() {
-        file.saveUsers(users);
-        file.saveLog();
+        fileIO.saveUsers(users);
+        fileIO.saveLog();
     }
 
     /**
-     * load users list and log id from file
+     * load users list and log id from fileIO
      */
     private void loadFile() {
-        users = file.loadUsers();
-        int[] log = file.loadLog();
+        users = fileIO.loadUsers();
+        int[] log = fileIO.loadLog();
         Vacancy.setIterator(log[0]);
         ApplicationFile.setIterator(log[1]);
     }
 
+    /**
+     * MD5 Hashing
+     *
+     * @param input
+     * @return
+     */
     public static String md5(String input) {
         String result = null;
         if (input == null) {
@@ -334,4 +453,5 @@ public class Application {
         }
         return result;
     }
+
 }

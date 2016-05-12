@@ -34,6 +34,14 @@ public class ApplicationFile implements Serializable {
         this.status = 0;
     }
 
+    public ApplicationFile(int applicationId, String name, String resume, int status, Date date_created) {
+        this.applicationId = applicationId;
+        this.date_created = date_created;
+        this.name = name;
+        this.resume = resume;
+        this.status = status;
+    }
+
     public String getResume() {
         return resume;
     }

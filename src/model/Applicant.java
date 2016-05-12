@@ -25,8 +25,8 @@ public class Applicant extends User implements Serializable {
         applicationFiles = new ArrayList();
     }
 
-    public Applicant(String email, String password, String name, String lastEducation, String expertise, char gender) {
-        super(email, password, name);
+    public Applicant(String email, String password, String name, String address, String lastEducation, String expertise, char gender) {
+        super(email, password, name, address);
         applicationFiles = new ArrayList();
         this.lastEducation = lastEducation;
         this.expertise = expertise;

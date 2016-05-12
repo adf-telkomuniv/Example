@@ -68,11 +68,11 @@ public class ConsoleView {
                         break;
                     case 3:
                         System.out.println("-------View Submitted Application-------");
-                        printList(v.getSubmittedFiles(false));
+                        printList(app.getSubmittedFiles(v, false));
                         break;
                     case 4:
                         System.out.println("-------View Accepted Application-------");
-                        printList(v.getSubmittedFiles(true));
+                        printList(app.getSubmittedFiles(v, true));
                         break;
                     case 5:
                         System.out.println("-------Accept Application-------");
@@ -131,7 +131,7 @@ public class ConsoleView {
                         break;
                     case 3:
                         System.out.println("-------View Vacancy List-------");
-                        List<Vacancy> vacancyList = c.getVacancyList();
+                        List<Vacancy> vacancyList = app.getVacancyList(c);
                         vacancyList.stream().forEach(System.out::println);
                         break;
                     case 4:
@@ -150,7 +150,7 @@ public class ConsoleView {
                         System.out.println("-------Select Vacancy-------");
                         System.out.println("Input Vacancy ID : ");
                         int idVacancy = numIn.nextInt();
-                        Vacancy v = c.searchVacancy(idVacancy);
+                        Vacancy v = app.searchVacancy(c, idVacancy);
                         if (v != null) {
                             vacancyMenu(v);
                         } else {
@@ -207,7 +207,7 @@ public class ConsoleView {
                         break;
                     case 3:
                         System.out.println("---------Vacancy List---------");
-                        showVacancy(a);
+                        printList(app.getAvailableVacancyList(a));
                         break;
                     case 4:
                         System.out.println("-------Apply Vacancy-------");
@@ -225,9 +225,7 @@ public class ConsoleView {
                         break;
                     case 5:
                         System.out.println("-------Application File List-------");
-                        for (ApplicationFile file : a.getApplicationFiles()) {
-                            System.out.println(file);
-                        }
+                        printList(app.getApplicationFiles(a));
                         break;
                     case 0:
                         break;
@@ -261,7 +259,7 @@ public class ConsoleView {
                 switch (menu) {
                     case 1:
                         System.out.println("---------Vacancy List---------");
-                        showVacancy(null);
+                        printList(app.getAvailableVacancyList(null));
                         break;
                     case 2:
                         System.out.println("input email : ");
@@ -314,34 +312,42 @@ public class ConsoleView {
 
     }
 
-    private void printList(ApplicationFile[] list) {
+    private void printList(String[] list) {
         if (list.length == 0) {
             System.out.println("Empty List");
         } else {
-            for (ApplicationFile file : list) {
-                System.out.println("application id:" + file.getApplicationId()
-                        + "\t applicant id:" + file.getName()
-                        + "\t resume:" + file.getResume());
+            for (String s : list) {
+                System.out.println(s);
             }
         }
     }
+//    private void printList(ApplicationFile[] list) {
+//        if (list.length == 0) {
+//            System.out.println("Empty List");
+//        } else {
+//            for (ApplicationFile file : list) {
+//                System.out.println("application id:" + file.getApplicationId()
+//                        + "\t applicant id:" + file.getName()
+//                        + "\t resume:" + file.getResume());
+//            }
+//        }
+//    }
 
-    private void showVacancy(Applicant applicant) {
-        for (Company c : app.getCompanyList()) {
-            for (Vacancy v : c.getActiveVacancy()) {
-                System.out.print("Company:" + c.getName()
-                        + "\tVacancy ID:" + v.getVacancyId()
-                        + "\tVacancy Name:" + v.getVacancyName());
-                ApplicationFile file;
-                if (applicant != null && (file = v.getSubmittedFile(applicant.getEmail())) != null) {
-                    System.out.println("\tStatus : "
-                            + (file.getStatus() == 0 ? "submitted"
-                                    : file.getStatus() == 1 ? "accepted" : "rejected"));
-                } else {
-                    System.out.println("\tDeadline:" + v.getDeadline());
-                }
-            }
-        }
-    }
-
+//    private void showVacancy(Applicant applicant) {
+//        for (Company c : app.getCompanyList()) {
+//            for (Vacancy v : c.getActiveVacancy()) {
+//                System.out.print("Company:" + c.getName()
+//                        + "\tVacancy ID:" + v.getVacancyId()
+//                        + "\tVacancy Name:" + v.getVacancyName());
+//                ApplicationFile file;
+//                if (applicant != null && (file = v.getSubmittedFile(applicant.getEmail())) != null) {
+//                    System.out.println("\tStatus : "
+//                            + (file.getStatus() == 0 ? "submitted"
+//                                    : file.getStatus() == 1 ? "accepted" : "rejected"));
+//                } else {
+//                    System.out.println("\tDeadline:" + v.getDeadline());
+//                }
+//            }
+//        }
+//    }
 }
