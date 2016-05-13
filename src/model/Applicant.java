@@ -104,12 +104,12 @@ public class Applicant extends User implements Serializable {
     /**
      * search ApplicationFile by Id
      *
-     * @param idApplication
+     * @param applicationId
      * @return ApplicationFile, null if not found
      */
-    public ApplicationFile searchApplicationFile(int idApplication) {
+    public ApplicationFile searchApplicationFile(int applicationId) {
         for (ApplicationFile file : applicationFiles) {
-            if (file.getApplicationId() == idApplication) {
+            if (file.getApplicationId() == applicationId) {
                 return file;
             }
         }
