@@ -14,7 +14,6 @@ import model.Company;
 import model.User;
 import model.Vacancy;
 import model.Application;
-import model.ApplicationFile;
 
 /**
  *
@@ -249,8 +248,8 @@ public class ConsoleView {
         do {
             try {
                 System.out.println("-------Main Menu------");
-                System.out.println("1. Show Vacancies");
-                System.out.println("2. Log In");
+                System.out.println("1. Log In");
+                System.out.println("2. Show Vacancies");
                 System.out.println("3. Register Company");
                 System.out.println("4. Register Applicant");
                 System.out.println("0. Exit");
@@ -258,10 +257,6 @@ public class ConsoleView {
                 menu = numIn.nextInt();
                 switch (menu) {
                     case 1:
-                        System.out.println("---------Vacancy List---------");
-                        printList(app.getAvailableVacancyList(null));
-                        break;
-                    case 2:
                         System.out.println("input email : ");
                         String email = strIn.nextLine();
                         System.out.println("input password : ");
@@ -274,6 +269,10 @@ public class ConsoleView {
                         } else if (user instanceof Company) {
                             companyMenu((Company) user);
                         }
+                        break;
+                    case 2:
+                        System.out.println("---------Vacancy List---------");
+                        printList(app.getAvailableVacancyList(null));
                         break;
                     case 3:
                         System.out.println("input email : ");
@@ -321,33 +320,4 @@ public class ConsoleView {
             }
         }
     }
-//    private void printList(ApplicationFile[] list) {
-//        if (list.length == 0) {
-//            System.out.println("Empty List");
-//        } else {
-//            for (ApplicationFile file : list) {
-//                System.out.println("application id:" + file.getApplicationId()
-//                        + "\t applicant id:" + file.getName()
-//                        + "\t resume:" + file.getResume());
-//            }
-//        }
-//    }
-
-//    private void showVacancy(Applicant applicant) {
-//        for (Company c : app.getCompanyList()) {
-//            for (Vacancy v : c.getActiveVacancy()) {
-//                System.out.print("Company:" + c.getName()
-//                        + "\tVacancy ID:" + v.getVacancyId()
-//                        + "\tVacancy Name:" + v.getVacancyName());
-//                ApplicationFile file;
-//                if (applicant != null && (file = v.getSubmittedFile(applicant.getEmail())) != null) {
-//                    System.out.println("\tStatus : "
-//                            + (file.getStatus() == 0 ? "submitted"
-//                                    : file.getStatus() == 1 ? "accepted" : "rejected"));
-//                } else {
-//                    System.out.println("\tDeadline:" + v.getDeadline());
-//                }
-//            }
-//        }
-//    }
 }

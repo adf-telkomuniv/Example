@@ -9,12 +9,12 @@ package view_gui;
  *
  * @author dee
  */
-public class PanelMainMenu extends javax.swing.JPanel {
+public class PanelApplicantMenu extends javax.swing.JPanel {
 
     /**
      * Creates new form PanelMainMenu
      */
-    public PanelMainMenu() {
+    public PanelApplicantMenu() {
         initComponents();
     }
 
